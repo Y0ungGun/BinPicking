@@ -188,9 +188,9 @@ def run_graspability_model(instance_id):
 
     return response
 
-def online_learning_from_dir(batch_size=32):
+def online_learning_from_dir(batch_size=128):
     pred_dir = "online_data"
-    # 피드백이 포함된 파일만 (가장 최신 32개)
+    # 피드백이 포함된 파일만 (가장 최신 128개)
     img_files = sorted(
         glob.glob(os.path.join(pred_dir, "*_[01].png")),
         key=os.path.getmtime,
@@ -223,6 +223,12 @@ def online_learning_from_dir(batch_size=32):
     loss.backward()
     optimizer.step()
     grasp_model.eval()
+
+    for img_file in img_files:
+        try:
+            os.remove(img_file)
+        except Exception as e:
+            print(f"Failed to delete {img_file}: {e}")
 
     print(f"[Online Learning] Trained on {batch_size} samples. Loss: {loss.item():.4f}")
     torch.save(grasp_model.state_dict(), "grasp_model.pth")
