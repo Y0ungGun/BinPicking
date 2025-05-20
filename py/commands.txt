@@ -1,0 +1,16 @@
+1. 학습 실행
+mlagents-learn config/custom_ppo.yaml --run-id=MyGrasp_250519_001 --time-scale=50
+
+2. 학습 이어하기
+mlagents-learn config/custom_ppo.yaml --run-id=MyGrasp_250430 --resume --time-scale=50
+
+3. tensorboard 활성화
+tensorboard --logdir=results/MyGrasp_250430
+
+4. 병렬 학습
+mlagents-learn config/custom_ppo.yaml --run-id=MyGrasp_250502_001 --env ../Env/DSRML.exe --time-scale=100 --num-envs=8
+
+5. git upload
+git add .
+git commit -m "설명"
+git push

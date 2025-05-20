@@ -1,0 +1,42 @@
+{ "commands":[{
+    "command": "movel",
+    "desiredPosition": "0.435, 0.133, 0.10, 1.5, 2.356194, 0",
+    "velocity": "0",
+    "acceleration": "0",
+    "time": "2",
+    "mod": "DR_MV_MOD_ABS",
+    "reference": "tool"
+},
+{
+    "command": "wait",
+    "desiredPosition": "0,0,0,0,0,0",
+    "velocity": "0",
+    "acceleration": "0",
+    "time": "5"
+},
+{
+    "command": "movel",
+    "desiredPosition": "0.435, 0.133, 0.02, 1.5, 3.92699, 0",
+    "velocity": "0",
+    "acceleration": "0",
+    "time": "2",
+    "mod": "DR_MV_MOD_ABS",
+    "reference": "tool"
+},
+{
+    "command": "wait",
+    "desiredPosition": "0,0,0,0,0,0",
+    "velocity": "0",
+    "acceleration": "0",
+    "time": "5"
+},
+{
+    "command": "movel",
+    "desiredPosition": "0.535, 0.233, 0.33, 1.5, 4.71, 0",
+    "velocity": "0",
+    "acceleration": "0",
+    "time": "2",
+    "mod": "DR_MV_MOD_ABS",
+    "reference": "tool"
+}
+]}

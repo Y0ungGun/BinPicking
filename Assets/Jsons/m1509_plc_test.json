@@ -1,0 +1,29 @@
+{ 
+    "commands":[{
+    "command": "movel",
+    "desiredPosition": "0.46, 0.0572, 0.31, -1.5, 3.141069054814195, 0",
+    "velocity": "0.03, 0.17453292519943295",
+    "acceleration": "0.06, 0.3490658503988659",
+    "time": "3",
+    "reference": "0",
+    "mod": "DR_MV_MOD_ABS"
+},
+{
+    "command": "wait_digital_input",
+    "index": "1",
+    "value": "ON"
+},
+{
+    "command": "movel",
+    "desiredPosition": "0.46737, 0.033, 0.5, 2.5689501260104537, 3.141069054814195, 2.5729643832900404",
+    "velocity": "0.03, 0.17453292519943295",
+    "acceleration": "0.06, 0.3490658503988659",
+    "time": "3",
+    "reference": "0",
+    "mod": "DR_MV_MOD_ABS"
+},
+{
+    "command": "set_digital_output",
+    "index": "1",
+    "value": "ON"
+}]}

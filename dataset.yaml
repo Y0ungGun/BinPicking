@@ -1,0 +1,7 @@
+names:
+- cube
+- cylinder
+- capsule
+nc: 3
+train: D:/ObjectDetection/images/train
+val: D:/ObjectDetection/images/val

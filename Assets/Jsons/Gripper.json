@@ -1,0 +1,24 @@
+{ "commands":[{
+    "command": "movej",
+    "desiredPosition": "-0.412866, 0.337476, 1.012276, 4.904199e-4, 1.79205, 0.40874",
+    "velocity": "1.0471975511965976",
+    "acceleration": "1.7453292519943295",
+    "time": "0",
+    "mod": "DR_MV_MOD_ABS"
+},
+{
+    "command": "wait",
+    "desiredPosition": "0,0,0,0,0,0",
+    "velocity": "0",
+    "acceleration": "0",
+    "time": "1.0"
+},
+{
+    "command": "movel",
+    "desiredPosition": "0.46737, 0.033, 0.3, 2.5689501260104537, 3.141069054814195, 2.5729643832900404",
+    "velocity": "0.03, 0.17453292519943295",
+    "acceleration": "0.06, 0.3490658503988659",
+    "time": "0",
+    "reference": "0",
+    "mod": "DR_MV_MOD_ABS"
+}]}

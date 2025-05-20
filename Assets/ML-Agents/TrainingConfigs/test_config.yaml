@@ -1,0 +1,17 @@
+behaviors:
+  RobotArmAgent:             
+    trainer_type: ppo     
+    hyperparameters:
+      batch_size: 512
+      buffer_size: 20480
+      learning_rate: 5.0e-4
+    network_settings:
+      hidden_units: 128
+      num_layers: 2
+    reward_signals:
+      extrinsic:
+        gamma: 0.99
+        strength: 1.0
+    max_steps: 500000        
+    time_horizon: 128
+    summary_freq: 10000

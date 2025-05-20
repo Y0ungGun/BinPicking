@@ -1,0 +1,65 @@
+{
+    "MyGrasp": {
+        "checkpoints": [
+            {
+                "steps": 12920,
+                "file_path": "results\\MyGrasp_250519_001\\MyGrasp\\MyGrasp-12920.onnx",
+                "reward": 0.0,
+                "creation_time": 1747703455.7558222,
+                "auxillary_file_paths": [
+                    "results\\MyGrasp_250519_001\\MyGrasp\\MyGrasp-12920.pt"
+                ]
+            },
+            {
+                "steps": 12932,
+                "file_path": "results\\MyGrasp_250519_001\\MyGrasp\\MyGrasp-12932.onnx",
+                "reward": null,
+                "creation_time": 1747703585.8076649,
+                "auxillary_file_paths": [
+                    "results\\MyGrasp_250519_001\\MyGrasp\\MyGrasp-12932.pt"
+                ]
+            },
+            {
+                "steps": 12949,
+                "file_path": "results\\MyGrasp_250519_001\\MyGrasp\\MyGrasp-12949.onnx",
+                "reward": null,
+                "creation_time": 1747712768.680654,
+                "auxillary_file_paths": [
+                    "results\\MyGrasp_250519_001\\MyGrasp\\MyGrasp-12949.pt"
+                ]
+            },
+            {
+                "steps": 12979,
+                "file_path": "results\\MyGrasp_250519_001\\MyGrasp\\MyGrasp-12979.onnx",
+                "reward": null,
+                "creation_time": 1747713007.419767,
+                "auxillary_file_paths": [
+                    "results\\MyGrasp_250519_001\\MyGrasp\\MyGrasp-12979.pt"
+                ]
+            },
+            {
+                "steps": 13003,
+                "file_path": "results\\MyGrasp_250519_001\\MyGrasp\\MyGrasp-13003.onnx",
+                "reward": null,
+                "creation_time": 1747713285.0427165,
+                "auxillary_file_paths": [
+                    "results\\MyGrasp_250519_001\\MyGrasp\\MyGrasp-13003.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 13003,
+            "file_path": "results\\MyGrasp_250519_001\\MyGrasp.onnx",
+            "reward": null,
+            "creation_time": 1747713285.0427165,
+            "auxillary_file_paths": [
+                "results\\MyGrasp_250519_001\\MyGrasp\\MyGrasp-13003.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.6.0+cu126"
+    }
+}

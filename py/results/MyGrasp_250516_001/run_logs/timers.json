@@ -1,0 +1,42 @@
+{
+    "name": "root",
+    "metadata": {
+        "timer_format_version": "0.1.0",
+        "start_time_seconds": "1747383900",
+        "python_version": "3.10.12 | packaged by Anaconda, Inc. | (main, Jul  5 2023, 19:01:18) [MSC v.1916 64 bit (AMD64)]",
+        "command_line_arguments": "C:\\Users\\dudrj\\anaconda3\\envs\\mlagents\\Scripts\\mlagents-learn config/custom_ppo.yaml --run-id=MyGrasp_250516_001 --time-scale=50 --resume",
+        "mlagents_version": "1.1.0",
+        "mlagents_envs_version": "1.1.0",
+        "communication_protocol_version": "1.5.0",
+        "pytorch_version": "2.6.0+cu126",
+        "numpy_version": "1.23.5",
+        "end_time_seconds": "1747383966"
+    },
+    "total": 65.72639830000116,
+    "count": 1,
+    "self": 0.017480700014857575,
+    "children": {
+        "run_training.setup": {
+            "total": 0.0987118999910308,
+            "count": 1,
+            "self": 0.0987118999910308
+        },
+        "TrainerController.start_learning": {
+            "total": 65.61020569999528,
+            "count": 1,
+            "self": 0.0003504000051179901,
+            "children": {
+                "TrainerController._reset_env": {
+                    "total": 65.60976939999091,
+                    "count": 1,
+                    "self": 65.60976939999091
+                },
+                "TrainerController._save_models": {
+                    "total": 8.589999924879521e-05,
+                    "count": 1,
+                    "self": 8.589999924879521e-05
+                }
+            }
+        }
+    }
+}

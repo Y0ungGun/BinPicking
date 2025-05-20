@@ -1,0 +1,54 @@
+Mono path[0] = 'C:/Users/dudrj/unityworkspace/RLProject/Env/DSRML_Data/Managed'
+Mono config path = 'C:/Users/dudrj/unityworkspace/RLProject/Env/MonoBleedingEdge/etc'
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.0.30f1 (62b05ba0686a)
+[Subsystems] Discovering subsystems at path C:/Users/dudrj/unityworkspace/RLProject/Env/DSRML_Data/UnitySubsystems
+kGfxThreadingModeSplitJobs is not supported on Direct3D 11. Reverting to kGfxThreadingModeClientWorkerJobs instead.
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce GTX 1660 SUPER (ID=0x21c4)
+    Vendor:   NVIDIA
+    VRAM:     5966 MB
+    Driver:   32.0.15.6117
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  0.100 seconds
+- Finished resetting the current domain, in  0.002 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+<RI> Input initialized.
+<RI> Initialized touch support.
+UnloadTime: 0.443200 ms
+Registered Communicator in Agent.
+Reward for Episode1: 0
+Deleting NonTarget at (0.16, 0.13, 1.39) (out of bounds)
+Reward for Episode2: 0
+Reward for Episode3: 0
+Reward for Episode4: 0
+Reward for Episode5: 0
+Reward for Episode6: 0
+Reward for Episode7: 0
+Reward for Episode8: 0
+IOException: Sharing violation on path C:\Users\dudrj\unityworkspace\RLProject\py\HandleResponse.png
+  at System.IO.FileStream..ctor (System.String path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, System.Int32 bufferSize, System.Boolean anonymous, System.IO.FileOptions options) [0x0019e] in <ed969b0e627d471da4848289f9c322df>:0 
+  at System.IO.FileStream..ctor (System.String path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share) [0x00000] in <ed969b0e627d471da4848289f9c322df>:0 
+  at (wrapper remoting-invoke-with-check) System.IO.FileStream..ctor(string,System.IO.FileMode,System.IO.FileAccess,System.IO.FileShare)
+  at System.IO.File.InternalWriteAllBytes (System.String path, System.Byte[] bytes) [0x00000] in <ed969b0e627d471da4848289f9c322df>:0 
+  at System.IO.File.WriteAllBytes (System.String path, System.Byte[] bytes) [0x00039] in <ed969b0e627d471da4848289f9c322df>:0 
+  at MyMLAgents.HandleResponse.SaveImageAsPNG (UnityEngine.Texture2D image, System.String filePath) [0x00007] in <7ae6c38661f94180bb066a11b6d22c47>:0 
+  at MyMLAgents.HandleResponse.CreateBoundingBoxPNG (System.Single[] targetDetection, UnityEngine.Camera cam) [0x0012e] in <7ae6c38661f94180bb066a11b6d22c47>:0 
+  at MyMLAgents.Socket.SendMsg () [0x000bc] in <7ae6c38661f94180bb066a11b6d22c47>:0 
+  at MyMLAgents.trainerUtils.DetectOBJ (UnityEngine.Component component) [0x000f1] in <7ae6c38661f94180bb066a11b6d22c47>:0 
+  at MyMLAgents.trainer2.CollectObservations (Unity.MLAgents.Sensors.VectorSensor sensor) [0x00044] in <7ae6c38661f94180bb066a11b6d22c47>:0 
+  at Unity.MLAgents.Agent.SendInfoToBrain () [0x0006e] in <6cba0b44242d4b2cba9dd15275fab7de>:0 
+  at Unity.MLAgents.Agent.SendInfo () [0x00008] in <6cba0b44242d4b2cba9dd15275fab7de>:0 
+  at (wrapper delegate-invoke) <Module>.invoke_void()
+  at Unity.MLAgents.Academy.EnvironmentStep () [0x00078] in <6cba0b44242d4b2cba9dd15275fab7de>:0 
+  at MyMLAgents.trainingManager2.Update () [0x0001d] in <7ae6c38661f94180bb066a11b6d22c47>:0 
+

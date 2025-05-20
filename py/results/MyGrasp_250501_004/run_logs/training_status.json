@@ -1,0 +1,29 @@
+{
+    "MyGrasp": {
+        "checkpoints": [
+            {
+                "steps": 3686,
+                "file_path": "results\\MyGrasp_250501_004\\MyGrasp\\MyGrasp-3686.onnx",
+                "reward": 3.0718954248366015,
+                "creation_time": 1746104451.4302135,
+                "auxillary_file_paths": [
+                    "results\\MyGrasp_250501_004\\MyGrasp\\MyGrasp-3686.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 3686,
+            "file_path": "results\\MyGrasp_250501_004\\MyGrasp.onnx",
+            "reward": 3.0718954248366015,
+            "creation_time": 1746104451.4302135,
+            "auxillary_file_paths": [
+                "results\\MyGrasp_250501_004\\MyGrasp\\MyGrasp-3686.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.6.0+cu126"
+    }
+}
