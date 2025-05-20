@@ -14,3 +14,6 @@ mlagents-learn config/custom_ppo.yaml --run-id=MyGrasp_250502_001 --env ../Env/D
 git add .
 git commit -m "설명"
 git push
+
+6. git download
+git clone "address"
