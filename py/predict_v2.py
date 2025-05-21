@@ -295,8 +295,8 @@ def handle_client(client_socket):
             pred_dir = "online_data"
             feedback_files = glob.glob(os.path.join(pred_dir, "*_[01].png"))
             # === 32, 64, 96, ... 개가 될 때마다 학습 ===
-            if len(feedback_files) >= 32 and len(feedback_files) % 32 == 0:
-                online_learning_from_dir(batch_size=32)
+            if len(feedback_files) ==128:
+                online_learning_from_dir(batch_size=128)
 
         except Exception as e:
             print(f"Client disconnected: {e}")

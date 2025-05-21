@@ -1,0 +1,38 @@
+{
+    "MyGrasp": {
+        "checkpoints": [
+            {
+                "steps": 10711,
+                "file_path": "results\\MyGrasp_250520_001\\MyGrasp\\MyGrasp-10711.onnx",
+                "reward": 3.3917525773195876,
+                "creation_time": 1747725379.0356474,
+                "auxillary_file_paths": [
+                    "results\\MyGrasp_250520_001\\MyGrasp\\MyGrasp-10711.pt"
+                ]
+            },
+            {
+                "steps": 30975,
+                "file_path": "results\\MyGrasp_250520_001\\MyGrasp\\MyGrasp-30975.onnx",
+                "reward": 4.094936708860759,
+                "creation_time": 1747734380.590422,
+                "auxillary_file_paths": [
+                    "results\\MyGrasp_250520_001\\MyGrasp\\MyGrasp-30975.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 30975,
+            "file_path": "results\\MyGrasp_250520_001\\MyGrasp.onnx",
+            "reward": 4.094936708860759,
+            "creation_time": 1747734380.590422,
+            "auxillary_file_paths": [
+                "results\\MyGrasp_250520_001\\MyGrasp\\MyGrasp-30975.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.6.0+cu126"
+    }
+}
