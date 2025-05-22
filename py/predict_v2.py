@@ -30,15 +30,15 @@ class GraspabilityModel(nn.Module):
         self.pool = nn.AdaptiveAvgPool2d((1, 1))
         self.flatten = nn.Flatten()
         self.fc1 = nn.Linear(1280, mid_dim)      # 1280 → 256
-        self.fc2 = nn.Linear(mid_dim, feature_dim)  # 256 → 64
-        self.fc3 = nn.Linear(feature_dim, 1)     # 64 → 1
+        self.fc2 = nn.Linear(mid_dim, feature_dim)  # 256 → 128
+        self.fc3 = nn.Linear(feature_dim, 1)     # 128 → 1
 
     def forward(self, x):
         x = self.features(x)
         x = self.pool(x)
         x = self.flatten(x)
         x = torch.relu(self.fc1(x))
-        feature_vec = torch.relu(self.fc2(x))    # (N, 64)
+        feature_vec = torch.relu(self.fc2(x))    # (N, 128)
         grasp_prob = torch.sigmoid(self.fc3(feature_vec)).squeeze(1)
         return grasp_prob, feature_vec
     
@@ -224,11 +224,11 @@ def online_learning_from_dir(batch_size=128):
     optimizer.step()
     grasp_model.eval()
 
-    for img_file in img_files:
-        try:
-            os.remove(img_file)
-        except Exception as e:
-            print(f"Failed to delete {img_file}: {e}")
+    # for img_file in img_files:
+    #     try:
+    #         os.remove(img_file)
+    #     except Exception as e:
+    #         print(f"Failed to delete {img_file}: {e}")
 
     print(f"[Online Learning] Trained on {batch_size} samples. Loss: {loss.item():.4f}")
     torch.save(grasp_model.state_dict(), "grasp_model.pth")
@@ -295,7 +295,7 @@ def handle_client(client_socket):
             pred_dir = "online_data"
             feedback_files = glob.glob(os.path.join(pred_dir, "*_[01].png"))
             # === 32, 64, 96, ... 개가 될 때마다 학습 ===
-            if len(feedback_files) ==128:
+            if len(feedback_files) % 128 == 0:
                 online_learning_from_dir(batch_size=128)
 
         except Exception as e:
