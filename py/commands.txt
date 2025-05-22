@@ -10,7 +10,11 @@ tensorboard --logdir=results/MyGrasp_250430
 4. 병렬 학습
 mlagents-learn config/custom_ppo.yaml --run-id=MyGrasp_250502_001 --env ../Env/DSRML.exe --time-scale=100 --num-envs=8
 
-5. git upload
+5. git connect
+git remote -v
+git remote add origin https://github.com/Y0ungGun/RL-Bin-Picking
+
+6. git upload
 git add .
 git commit -m "설명"
 git push
