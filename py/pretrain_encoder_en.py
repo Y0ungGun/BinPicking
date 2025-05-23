@@ -194,6 +194,10 @@ def train_autoencoder_with_metrics(img_dir, epochs=10, batch_size=128, lr=1e-3, 
 if __name__ == "__main__":
     all_losses = []
     all_ssims = []
+    import torch
+    print("CUDA 사용 가능 여부:", torch.cuda.is_available())
+    print("사용 중인 GPU 이름:", torch.cuda.get_device_name(0))
+    print("현재 사용 중인 장치:", torch.cuda.current_device())
 
     start_time = time.time()
     train_autoencoder_with_metrics(
