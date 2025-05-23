@@ -22,5 +22,5 @@ git push
 6. git download
 git clone "address"
 
-250520_001:
-10,500까지는 x32, time-scale = 1 으로 학습 10,500부터 다시 x12 time-scale=50으로 학습(2.5배의 시간)
+7. visualize CNN training
+python visualize.py en_batch256,epoch1000,data6000/metrics_en.npz mbn_batch256,epoch1000,data6000/metrics_en.npz
