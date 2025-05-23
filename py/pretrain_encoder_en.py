@@ -125,7 +125,7 @@ def train_autoencoder_with_metrics(img_dir, epochs=10, batch_size=128, lr=1e-3, 
     sample_dir = os.path.join(os.path.dirname(__file__), "en")
     os.makedirs(sample_dir, exist_ok=True)
 
-    epoch_times = []
+    epoch_times = [] 
     all_maes = []
     all_psnrs = []
 
