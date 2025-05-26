@@ -193,7 +193,7 @@ def train_autoencoder_with_metrics(img_dir, epochs=10, batch_size=128, lr=1e-3, 
 if __name__ == "__main__":
     start_time = time.time()
     train_autoencoder_with_metrics(
-        img_dir="../online_data",
+        img_dir="online_data",
         epochs=1000,
         batch_size=256,
         lr=1e-3,
