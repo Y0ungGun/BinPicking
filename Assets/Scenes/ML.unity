@@ -730,7 +730,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -2318,7 +2318,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -3006,7 +3006,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 287924198402939850, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorPosition.z
-      value: -0.00000066575046
+      value: 0.0000012415982
       objectReference: {fileID: 0}
     - target: {fileID: 287924198402939850, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorRotation.w
@@ -3034,7 +3034,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 610248002758301702, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorPosition.z
-      value: 0.0000012516969
+      value: -0.0000006556518
       objectReference: {fileID: 0}
     - target: {fileID: 610248002758301702, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorRotation.w
@@ -3054,7 +3054,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2416377410687060575, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorPosition.x
-      value: -0.00014305115
+      value: 0.000047683716
       objectReference: {fileID: 0}
     - target: {fileID: 2416377410687060575, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorPosition.y
@@ -3098,7 +3098,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3779297052858918807, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorPosition.x
-      value: -0.000035762787
+      value: -0.00022649765
       objectReference: {fileID: 0}
     - target: {fileID: 3779297052858918807, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorPosition.y
@@ -3679,7 +3679,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -4364,7 +4364,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -7226,7 +7226,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -9639,7 +9639,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -13952,7 +13952,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -15073,7 +15073,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -16584,7 +16584,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -23155,7 +23155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -30957,7 +30957,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -32537,7 +32537,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -32704,9 +32704,9 @@ MonoBehaviour:
     VectorObservationSize: 64
     NumStackedVectorObservations: 1
     m_ActionSpec:
-      m_NumContinuousActions: 6
+      m_NumContinuousActions: 256
       BranchSizes: 
-    VectorActionSize: 06000000
+    VectorActionSize: 00010000
     VectorActionDescriptions: []
     VectorActionSpaceType: 1
     hasUpgradedBrainParametersWithActionSpec: 1
@@ -34335,7 +34335,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -35843,7 +35843,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -46148,7 +46148,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 287924198402939850, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorPosition.z
-      value: -0.0000006657504
+      value: 0.000001241598
       objectReference: {fileID: 0}
     - target: {fileID: 287924198402939850, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorRotation.w
@@ -46176,7 +46176,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 610248002758301702, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorPosition.z
-      value: 0.0000012516969
+      value: -0.0000006556518
       objectReference: {fileID: 0}
     - target: {fileID: 610248002758301702, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorRotation.w
@@ -46196,7 +46196,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2416377410687060575, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorPosition.x
-      value: -0.00014305115
+      value: 0.000047683716
       objectReference: {fileID: 0}
     - target: {fileID: 2416377410687060575, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorPosition.y
@@ -46240,7 +46240,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3779297052858918807, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorPosition.x
-      value: -0.000035762787
+      value: -0.00022649765
       objectReference: {fileID: 0}
     - target: {fileID: 3779297052858918807, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorPosition.y
@@ -48609,7 +48609,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -53587,7 +53587,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6663944792098912555, guid: 82915b329b29a794196a30b15f9bc830, type: 3}
       propertyPath: m_ParentAnchorPosition.z
-      value: 0.00000017881395
+      value: 0.0000020861626
       objectReference: {fileID: 0}
     - target: {fileID: 6892341815070937637, guid: 82915b329b29a794196a30b15f9bc830, type: 3}
       propertyPath: m_LocalPosition.x
@@ -58401,7 +58401,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -60866,7 +60866,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -64960,7 +64960,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -65086,7 +65086,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -65417,7 +65417,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -65932,7 +65932,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6663944792098912555, guid: 82915b329b29a794196a30b15f9bc830, type: 3}
       propertyPath: m_ParentAnchorPosition.z
-      value: 0.00000017881393
+      value: 0.0000020861623
       objectReference: {fileID: 0}
     - target: {fileID: 6892341815070937637, guid: 82915b329b29a794196a30b15f9bc830, type: 3}
       propertyPath: m_LocalPosition.x
@@ -72454,7 +72454,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -73284,7 +73284,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -74941,7 +74941,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -77687,7 +77687,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 287924198402939850, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorPosition.z
-      value: -0.0000006657504
+      value: 0.000001241598
       objectReference: {fileID: 0}
     - target: {fileID: 287924198402939850, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorRotation.w
@@ -77715,7 +77715,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 610248002758301702, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorPosition.z
-      value: 0.0000012516971
+      value: -0.0000006556517
       objectReference: {fileID: 0}
     - target: {fileID: 610248002758301702, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorRotation.w
@@ -77735,7 +77735,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2416377410687060575, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorPosition.x
-      value: -0.00014305115
+      value: 0.000047683716
       objectReference: {fileID: 0}
     - target: {fileID: 2416377410687060575, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorPosition.y
@@ -77779,7 +77779,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3779297052858918807, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorPosition.x
-      value: -0.000035762787
+      value: -0.00022649765
       objectReference: {fileID: 0}
     - target: {fileID: 3779297052858918807, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorPosition.y
@@ -86416,7 +86416,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -89486,7 +89486,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6663944792098912555, guid: 82915b329b29a794196a30b15f9bc830, type: 3}
       propertyPath: m_ParentAnchorPosition.z
-      value: 0.00000017881392
+      value: 0.0000020861626
       objectReference: {fileID: 0}
     - target: {fileID: 6892341815070937637, guid: 82915b329b29a794196a30b15f9bc830, type: 3}
       propertyPath: m_LocalPosition.x
@@ -90410,7 +90410,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -94249,7 +94249,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -96186,7 +96186,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -96931,7 +96931,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -98833,7 +98833,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -99677,7 +99677,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -100828,7 +100828,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6663944792098912555, guid: 82915b329b29a794196a30b15f9bc830, type: 3}
       propertyPath: m_ParentAnchorPosition.z
-      value: 0.00000017881395
+      value: 0.0000020861626
       objectReference: {fileID: 0}
     - target: {fileID: 6892341815070937637, guid: 82915b329b29a794196a30b15f9bc830, type: 3}
       propertyPath: m_LocalPosition.x
@@ -101684,7 +101684,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 64
+    VectorObservationSize: 256
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 6
@@ -109655,7 +109655,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 287924198402939850, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorPosition.z
-      value: -0.00000066575046
+      value: 0.0000012415982
       objectReference: {fileID: 0}
     - target: {fileID: 287924198402939850, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorRotation.w
@@ -109683,7 +109683,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 610248002758301702, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorPosition.z
-      value: 0.0000012516969
+      value: -0.0000006556518
       objectReference: {fileID: 0}
     - target: {fileID: 610248002758301702, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorRotation.w
@@ -109703,7 +109703,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2416377410687060575, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorPosition.x
-      value: -0.00014305115
+      value: 0.000047683716
       objectReference: {fileID: 0}
     - target: {fileID: 2416377410687060575, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorPosition.y
@@ -109747,7 +109747,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3779297052858918807, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorPosition.x
-      value: -0.000035762787
+      value: -0.00022649765
       objectReference: {fileID: 0}
     - target: {fileID: 3779297052858918807, guid: abe5550afd4cd174da49ac9149fd5cb2, type: 3}
       propertyPath: m_ParentAnchorPosition.y

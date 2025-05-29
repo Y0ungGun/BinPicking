@@ -13,7 +13,7 @@ behaviors:
       learning_rate_schedule: linear
     network_settings:
       normalize: true
-      hidden_units: 32
+      hidden_units: 256
       num_layers: 2
       torch_device: cuda
     reward_signals:
