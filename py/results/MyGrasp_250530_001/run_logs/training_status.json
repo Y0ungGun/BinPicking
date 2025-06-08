@@ -1,0 +1,56 @@
+{
+    "MyGrasp": {
+        "checkpoints": [
+            {
+                "steps": 0,
+                "file_path": "results\\MyGrasp_250530_001\\MyGrasp\\MyGrasp-0.onnx",
+                "reward": null,
+                "creation_time": 1748570347.6824899,
+                "auxillary_file_paths": [
+                    "results\\MyGrasp_250530_001\\MyGrasp\\MyGrasp-0.pt"
+                ]
+            },
+            {
+                "steps": 1416,
+                "file_path": "results\\MyGrasp_250530_001\\MyGrasp\\MyGrasp-1416.onnx",
+                "reward": 6.387096774193548,
+                "creation_time": 1748572049.4546509,
+                "auxillary_file_paths": [
+                    "results\\MyGrasp_250530_001\\MyGrasp\\MyGrasp-1416.pt"
+                ]
+            },
+            {
+                "steps": 1505,
+                "file_path": "results\\MyGrasp_250530_001\\MyGrasp\\MyGrasp-1505.onnx",
+                "reward": 2.0,
+                "creation_time": 1748574953.1600952,
+                "auxillary_file_paths": [
+                    "results\\MyGrasp_250530_001\\MyGrasp\\MyGrasp-1505.pt"
+                ]
+            },
+            {
+                "steps": 12662,
+                "file_path": "results\\MyGrasp_250530_001\\MyGrasp\\MyGrasp-12662.onnx",
+                "reward": 6.0,
+                "creation_time": 1748579307.242044,
+                "auxillary_file_paths": [
+                    "results\\MyGrasp_250530_001\\MyGrasp\\MyGrasp-12662.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 12662,
+            "file_path": "results\\MyGrasp_250530_001\\MyGrasp.onnx",
+            "reward": 6.0,
+            "creation_time": 1748579307.242044,
+            "auxillary_file_paths": [
+                "results\\MyGrasp_250530_001\\MyGrasp\\MyGrasp-12662.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.6.0+cu126"
+    }
+}

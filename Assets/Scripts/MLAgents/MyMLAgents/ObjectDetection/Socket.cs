@@ -16,11 +16,19 @@ namespace MyMLAgents
     {
         public string serverIP = "127.0.0.1";  // ���� IP
         public int serverPort = 7779;
+        private Transform Connector;
+        private MeshRenderer Con;
+        private Material successMat;
+        private Material failMat;
         private GameObject target;
         private Camera cam;
         private GameObject Objects;
         private void Start()
         {
+            Connector = transform.parent.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == "Connector");
+            Con = Connector.GetComponent<MeshRenderer>();
+            successMat = Resources.Load<Material>("Success");
+            failMat = Resources.Load<Material>("Fail");
             cam = transform.parent.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == "IntelCamera")?.GetComponent<Camera>();
             Objects = transform.parent.Find("Objects")?.gameObject;
         }
@@ -38,7 +46,7 @@ namespace MyMLAgents
                 {
                     msg = comp.AgentID.ToString();
                 }
-                writer.WriteLine(msg); // �޽��� "1"�� ����
+                writer.WriteLine(msg);
                 writer.Flush();
                 //Debug.Log("Messge sent");
 
@@ -49,7 +57,7 @@ namespace MyMLAgents
                     float[] detection = new float[6];
                     for (int j = 0; j < 6; j++)
                     {
-                        detection[j] = reader.ReadSingle();  // �� float ���� ����
+                        detection[j] = reader.ReadSingle(); 
                     }
                     detections.Add(detection);
                 }
@@ -81,7 +89,10 @@ namespace MyMLAgents
                 writer.WriteLine(msg); 
                 writer.Flush();
                 //Debug.Log("Messge sent");
-
+                if (success == true)
+                    Con.material = successMat;
+                else if (success == false)
+                    Con.material = failMat;
                 int featureLength = reader.ReadInt32();
                 if (featureLength <= 0 || featureLength > 1024)
                 {

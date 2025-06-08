@@ -35,7 +35,7 @@ namespace MyMLAgents
         private float Episode = 0;
         private float EpisodeReward = 0;
         private int EpisodeLength;
-        private float _w = 0.5f;
+        private float _w = 0.25f;
         private float _reward;
         private float r_dist;
         private float x_ = 0;
@@ -86,14 +86,14 @@ namespace MyMLAgents
 
                 isActionInProgress = true;
                 float[] featureVector = trainerUtils.DetectOBJv3(this, cam, _success);
-                if (featureVector != null && featureVector.Length == 66)
+                if (featureVector != null && featureVector.Length == 258)
                 {
-                    float[] obsVec = new float[64];
-                    Array.Copy(featureVector, 0, obsVec, 0, 64);
+                    float[] obsVec = new float[256];
+                    Array.Copy(featureVector, 0, obsVec, 0, 256);
                     sensor.AddObservation(obsVec);
 
-                    x_ = featureVector[64];
-                    y_ = featureVector[65];
+                    x_ = featureVector[256];
+                    y_ = featureVector[257];
                 }
                 else
                 {

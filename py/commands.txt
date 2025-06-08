@@ -24,3 +24,5 @@ git clone "address"
 
 7. visualize CNN training
 python visualize.py en_batch256,epoch1000,data6000/metrics_en.npz mbn_batch256,epoch1000,data6000/metrics_en.npz
+
+8. Graspability Model 관리 - online learning 진행한 Grasp Agent와 함께 보관하고, best_loss.txt도 함께 보관해야 함.

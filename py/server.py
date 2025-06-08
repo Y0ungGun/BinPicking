@@ -65,10 +65,12 @@ def clean_online_data():
     if not os.path.exists(save_dir):
         return
     for fname in os.listdir(save_dir):
-        if fname.endswith(".png") and not (fname.endswith("_0.png") or fname.endswith("_1.png")):
-            file_path = os.path.join(save_dir, fname)
-            print(f"Deleting leftover file without feedback: {file_path}")
+        file_path = os.path.join(save_dir, fname)
+        try:
             os.remove(file_path)
+            print(f"Deleted: {file_path}")
+        except Exception as e:
+            print(f"Failed to delete {file_path}: {e}")
 
 def get_next_data_no():
     save_dir = "online_data"
@@ -166,13 +168,14 @@ def run_graspability_model(instance_id):
 
     cropped_objects = extract_objects(img_array, detections)
     if cropped_objects:
-        objects_tensor = torch.from_numpy(np.array(cropped_objects)).permute(0, 3, 1, 2).float().contiguous()
+        objects_tensor = torch.from_numpy(np.array(cropped_objects)).permute(0, 3, 1, 2).float() / 255.0
+        objects_tensor = objects_tensor.to(device)
         with torch.no_grad():
             grasp_probs, feature_vectors = grasp_model(objects_tensor)
         
-    grasp_probs_np = grasp_probs.numpy()
-    best_idx = int(np.argmax(grasp_probs))
-    best_feature = feature_vectors[best_idx]
+    grasp_probs_np = grasp_probs.cpu().numpy()
+    best_idx = int(np.argmax(grasp_probs_np))
+    best_feature = feature_vectors[best_idx].cpu().numpy()
     best_prob = grasp_probs_np[best_idx]
     best_img = cropped_objects[best_idx]
 
@@ -180,8 +183,7 @@ def run_graspability_model(instance_id):
     x1, y1, x2, y2, conf, class_id = detections[0][best_idx]
     x = float((x1 + x2) / 2)
     y = float((y1 + y2) / 2)
-    grasp_prob = grasp_probs[best_idx]
-    print(f"Best Object: ({round(x, 3)}, {round(y, 3)}), Class: {class_id}, Confidence: {conf}, Graspability: {grasp_prob}")
+    print(f"Best Object: Class: {class_id}, Confidence: {conf}, Graspability: {best_prob}")
     # response 생성
     response = struct.pack('I', len(best_feature))
     response += struct.pack(f'{len(best_feature)}f', *best_feature)
@@ -196,7 +198,9 @@ def run_graspability_model(instance_id):
 
     return response
 
+
 def online_learning_from_dir(batch_size=128):
+    global optimizer
     pred_dir = "online_data"
     # 피드백이 포함된 파일만 (가장 최신 128개)
     img_files = sorted(
@@ -221,9 +225,10 @@ def online_learning_from_dir(batch_size=128):
     images = np.stack(images)
     images = torch.from_numpy(images).permute(0, 3, 1, 2).float() / 255.0
     labels = torch.tensor(labels, dtype=torch.float32)
+    images = images.to(device)
+    labels = labels.to(device)
 
     grasp_model.train()
-    optimizer = torch.optim.Adam(grasp_model.parameters(), lr=1e-4)
     criterion = torch.nn.BCELoss()
     optimizer.zero_grad()
     outputs, _ = grasp_model(images)
@@ -231,6 +236,21 @@ def online_learning_from_dir(batch_size=128):
     loss.backward()
     optimizer.step()
     grasp_model.eval()
+
+    # === best loss 체크포인트 저장 ===
+    best_loss_path = "grasp_out.pth"
+    try:
+        with open("best_loss.txt", "r") as f:
+            best_loss = float(f.read().strip())
+    except:
+        best_loss = float("inf")
+    if loss.item() < best_loss:
+        torch.save(grasp_model.output.state_dict(), best_loss_path)
+        with open("best_loss.txt", "w") as f:
+            f.write(str(loss.item()))
+        print(f"New best loss {loss.item():.4f}, checkpoint saved to {best_loss_path}")
+    else:
+        print(f"Loss {loss.item():.4f} (best: {best_loss:.4f})")
 
     for img_file in img_files:
         try:
@@ -303,7 +323,7 @@ def handle_client(client_socket):
             pred_dir = "online_data"
             feedback_files = glob.glob(os.path.join(pred_dir, "*_[01].png"))
             # === 32, 64, 96, ... 개가 될 때마다 학습 ===
-            if len(feedback_files) % 128 == 0:
+            if len(feedback_files) >= 128:
                 online_learning_from_dir(batch_size=128)
 
         except Exception as e:
@@ -329,16 +349,24 @@ PORT = 7779
 IMAGE_PATH = "./images"
 
 # GraspabilityModel 초기화
-grasp_model = GraspabilityModel()
-# encoder_rn256.pth에서 feature extractor와 fc만 로드
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+grasp_model = GraspabilityModel().to(device)
+
 state_dict = torch.load("encoder/rn256/encoder_rn256.pth", map_location="cpu")
 model_dict = grasp_model.state_dict()
-# 키 이름이 다를 수 있으니, 필요한 부분만 update
+
 pretrained_dict = {k: v for k, v in state_dict.items() if k in model_dict and 'output' not in k}
 model_dict.update(pretrained_dict)
 grasp_model.load_state_dict(model_dict)
 print("Loaded encoder_rn256 weights (feature extractor + fc).")
+
+output_ckpt = "grasp_out.pth"
+if os.path.exists(output_ckpt):
+    grasp_model.output.load_state_dict(torch.load(output_ckpt, map_location="cpu"))
+    print(f"Loaded output head weights from {output_ckpt}")
+
 grasp_model.eval()
+optimizer = torch.optim.Adam(grasp_model.output.parameters(), lr=5e-4)  # 출력층만 학습
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(script_dir)

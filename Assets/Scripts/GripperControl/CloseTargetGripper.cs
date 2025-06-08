@@ -117,7 +117,7 @@ public class CloseTargetGripper : MonoBehaviour
         
         if (ButtonClicked)
         {
-            float RightTargetClosed = Mathf.Clamp(thetaDeg - gripChange, 0.01f, 49.99f);
+            float RightTargetClosed = Mathf.Clamp(thetaDeg - gripChange, 20.00f, 49.99f);
             LinkLeftDrive.target = RightTargetClosed;
             LinkRightDrive.target = -RightTargetClosed;
             LinkLeftInnerDrive.target = RightTargetClosed;
@@ -128,7 +128,7 @@ public class CloseTargetGripper : MonoBehaviour
         }
         else
         {
-            float RightTargetOpen = Mathf.Clamp(thetaDeg + gripChange, 0.01f, 49.99f);
+            float RightTargetOpen = Mathf.Clamp(thetaDeg + gripChange, 20.00f, 49.99f);
             LinkLeftDrive.target = RightTargetOpen;
             LinkRightDrive.target = -RightTargetOpen;
             LinkLeftInnerDrive.target = RightTargetOpen;
