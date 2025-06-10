@@ -2,58 +2,58 @@
     "MyGrasp": {
         "checkpoints": [
             {
-                "steps": 384499,
-                "file_path": "results\\MyGrasp_250605\\MyGrasp\\MyGrasp-384499.onnx",
-                "reward": 19.15,
-                "creation_time": 1749354333.573053,
+                "steps": 498499,
+                "file_path": "results\\MyGrasp_250605\\MyGrasp\\MyGrasp-498499.onnx",
+                "reward": 18.929577464788732,
+                "creation_time": 1749498166.8097627,
                 "auxillary_file_paths": [
-                    "results\\MyGrasp_250605\\MyGrasp\\MyGrasp-384499.pt"
+                    "results\\MyGrasp_250605\\MyGrasp\\MyGrasp-498499.pt"
                 ]
             },
             {
-                "steps": 384999,
-                "file_path": "results\\MyGrasp_250605\\MyGrasp\\MyGrasp-384999.onnx",
-                "reward": 19.246913580246915,
-                "creation_time": 1749354673.9851654,
+                "steps": 498999,
+                "file_path": "results\\MyGrasp_250605\\MyGrasp\\MyGrasp-498999.onnx",
+                "reward": 18.083333333333332,
+                "creation_time": 1749498488.4942448,
                 "auxillary_file_paths": [
-                    "results\\MyGrasp_250605\\MyGrasp\\MyGrasp-384999.pt"
+                    "results\\MyGrasp_250605\\MyGrasp\\MyGrasp-498999.pt"
                 ]
             },
             {
-                "steps": 385499,
-                "file_path": "results\\MyGrasp_250605\\MyGrasp\\MyGrasp-385499.onnx",
-                "reward": 19.091836734693878,
-                "creation_time": 1749355015.8891675,
+                "steps": 499499,
+                "file_path": "results\\MyGrasp_250605\\MyGrasp\\MyGrasp-499499.onnx",
+                "reward": 18.04310344827586,
+                "creation_time": 1749498812.8971763,
                 "auxillary_file_paths": [
-                    "results\\MyGrasp_250605\\MyGrasp\\MyGrasp-385499.pt"
+                    "results\\MyGrasp_250605\\MyGrasp\\MyGrasp-499499.pt"
                 ]
             },
             {
-                "steps": 385999,
-                "file_path": "results\\MyGrasp_250605\\MyGrasp\\MyGrasp-385999.onnx",
-                "reward": 18.553719008264462,
-                "creation_time": 1749355356.4006324,
+                "steps": 499999,
+                "file_path": "results\\MyGrasp_250605\\MyGrasp\\MyGrasp-499999.onnx",
+                "reward": 18.208955223880597,
+                "creation_time": 1749499138.0304174,
                 "auxillary_file_paths": [
-                    "results\\MyGrasp_250605\\MyGrasp\\MyGrasp-385999.pt"
+                    "results\\MyGrasp_250605\\MyGrasp\\MyGrasp-499999.pt"
                 ]
             },
             {
-                "steps": 386136,
-                "file_path": "results\\MyGrasp_250605\\MyGrasp\\MyGrasp-386136.onnx",
-                "reward": 18.571428571428573,
-                "creation_time": 1749355570.0485415,
+                "steps": 500001,
+                "file_path": "results\\MyGrasp_250605\\MyGrasp\\MyGrasp-500001.onnx",
+                "reward": 18.208955223880597,
+                "creation_time": 1749499138.3577678,
                 "auxillary_file_paths": [
-                    "results\\MyGrasp_250605\\MyGrasp\\MyGrasp-386136.pt"
+                    "results\\MyGrasp_250605\\MyGrasp\\MyGrasp-500001.pt"
                 ]
             }
         ],
         "final_checkpoint": {
-            "steps": 386136,
+            "steps": 500001,
             "file_path": "results\\MyGrasp_250605\\MyGrasp.onnx",
-            "reward": 18.571428571428573,
-            "creation_time": 1749355570.0485415,
+            "reward": 18.208955223880597,
+            "creation_time": 1749499138.3577678,
             "auxillary_file_paths": [
-                "results\\MyGrasp_250605\\MyGrasp\\MyGrasp-386136.pt"
+                "results\\MyGrasp_250605\\MyGrasp\\MyGrasp-500001.pt"
             ]
         }
     },
