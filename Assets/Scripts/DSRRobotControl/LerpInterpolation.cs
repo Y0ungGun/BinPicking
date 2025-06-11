@@ -14,7 +14,7 @@ namespace DSRRobotControl
             float dist = Vector3.Distance(start, end);
             if (dist == 0)
             {
-                for (int dummy = 0; dummy <= time / 0.05f; dummy++)
+                for (int dummy = 0; dummy <= time / 0.1f; dummy++)
                 {
                     pose.Add(start);
                 }
@@ -23,26 +23,26 @@ namespace DSRRobotControl
             float T2 = dist / vel;
             float T3 = T1 + T2;
 
-            float remainder = T3 % 0.05f;
+            float remainder = T3 % 0.1f;
 
             int i;
-            for (i = 0; 0.05f * i <= T1; i++)
+            for (i = 0; 0.1f * i <= T1; i++)
             {
-                float t = 0.05f * i;
+                float t = 0.1f * i;
                 float r = (0.5f * acc * t * t) / dist;
                 Vector3 result = Vector3.Lerp(start, end, r);
                 pose.Add(result);
             }
-            for (; 0.05f * i <= T2; i++)
+            for (; 0.1f * i <= T2; i++)
             {
-                float t = 0.05f * i;
+                float t = 0.1f * i;
                 float r = (0.5f * acc * T1 * T1 + vel * (t - T1)) / dist;
                 Vector3 result = Vector3.Lerp(start, end, r);
                 pose.Add(result);
             }
-            for (; 0.05f * i <= T3; i++)
+            for (; 0.1f * i <= T3; i++)
             {
-                float t = 0.05f * i;
+                float t = 0.1f * i;
                 float r = (0.5f * acc * T1 * T1 + vel * (T2 - T1) + (vel * (t - T2) - 0.5f * acc * (t - T2) * (t - T2))) / dist;
                 Vector3 result = Vector3.Lerp(start, end, r);
                 pose.Add(result);
@@ -62,7 +62,7 @@ namespace DSRRobotControl
             float T1 = vel / acc;
             if (dist == 0)
             {
-                for (int dummy = 0; dummy <= time / 0.05f; dummy++)
+                for (int dummy = 0; dummy <= time / 0.1f; dummy++)
                 {
                     pose.Add(start);
                 }
@@ -87,7 +87,7 @@ namespace DSRRobotControl
 
             if (theta == 0)
             {
-                for (int dummy = 0; dummy <= time / 0.05f + 1; dummy++)
+                for (int dummy = 0; dummy <= time / 0.1f + 1; dummy++)
                 {
                     quaternions.Add(start);
                 }
@@ -95,26 +95,26 @@ namespace DSRRobotControl
             float T1 = vel / acc;
             float T2 = theta / vel;
             float T3 = T1 + T2;
-            float remainder = T3 % 0.05f;
+            float remainder = T3 % 0.1f;
 
             int i;
-            for (i = 0; 0.05f * i <= T1; i++)
+            for (i = 0; 0.1f * i <= T1; i++)
             {
-                float t = 0.05f * i;
+                float t = 0.1f * i;
                 float r = (0.5f * acc * t * t) / theta;
                 Quaternion result = Quaternion.Slerp(start, end, r);
                 quaternions.Add(result);
             }
-            for (; 0.05f * i <= T2; i++)
+            for (; 0.1f * i <= T2; i++)
             {
-                float t = 0.05f * i;
+                float t = 0.1f * i;
                 float r = (0.5f * acc * T1 * T1 + vel * (t - T1)) / theta;
                 Quaternion reult = Quaternion.Slerp(start, end, r);
                 quaternions.Add(reult);
             }
-            for (; 0.05f * i <= T3; i++)
+            for (; 0.1f * i <= T3; i++)
             {
-                float t = 0.05f * i;
+                float t = 0.1f * i;
                 float r = (0.5f * acc * T1 * T1 + vel * (T2 - T1) + (vel * (t - T2) - 0.5f * acc * (t - T2) * (t - T2))) / theta;
                 Quaternion result = Quaternion.Slerp(start, end, r);
                 quaternions.Add(result);
@@ -135,7 +135,7 @@ namespace DSRRobotControl
 
             if (theta == 0)
             {
-                for (int dummy = 0; dummy <= time / 0.05f + 1; dummy++)
+                for (int dummy = 0; dummy <= time / 0.1f + 1; dummy++)
                 {
                     quaternions.Add(start);
                 }
@@ -161,7 +161,7 @@ namespace DSRRobotControl
 
             if (dtheta == 0)
             {
-                for (int dummy = 0; dummy <= time / 0.05f + 1; dummy++)
+                for (int dummy = 0; dummy <= time / 0.1f + 1; dummy++)
                 {
                     joints.Add(start);
                 }
@@ -187,16 +187,16 @@ namespace DSRRobotControl
             float T3 = 2 * T2; 
         
             int i;
-            for (i = 0; 0.05f * i <= T2; i++)
+            for (i = 0; 0.1f * i <= T2; i++)
             {
-                float t = 0.05f * i;
+                float t = 0.1f * i;
                 float r = (0.5f * acc * t * t) / dtheta;
                 double result = DLerp.dLerp(start, end, r);
                 joints.Add(result);
             }
-            for (; 0.05f * i <= T3; i++)
+            for (; 0.1f * i <= T3; i++)
             {
-                float t = 0.05f * i;
+                float t = 0.1f * i;
                 float r = (0.5f * acc * T2 * T2 + (acc * T2 * (t - T2) - 0.5f * acc * (t - T2) * (t - T2))) / dtheta;
                 double result = DLerp.dLerp(start, end, r);
                 joints.Add(result);
@@ -213,26 +213,26 @@ namespace DSRRobotControl
             float T2 = dtheta / vel;
             float T3 = T1 + T2;
 
-            float remainder = T3 % 0.05f;
+            float remainder = T3 % 0.1f;
 
             int i;
-            for (i = 0; 0.05f * i <= T1; i++)
+            for (i = 0; 0.1f * i <= T1; i++)
             {
-                float t = 0.05f * i;
+                float t = 0.1f * i;
                 float r = (0.5f * acc * t * t) / dtheta;
                 double result = DLerp.dLerp(start, end, r);
                 joints.Add(result);
             }
-            for (; 0.05f * i <= T2; i++)
+            for (; 0.1f * i <= T2; i++)
             {
-                float t = 0.05f * i;
+                float t = 0.1f * i;
                 float r = (0.5f * acc * T1 * T1 + vel * (t - T1)) / dtheta;
                 double result = DLerp.dLerp(start, end, r);
                 joints.Add(result);
             }
-            for (; 0.05f * i <= T3; i++)
+            for (; 0.1f * i <= T3; i++)
             {
-                float t = 0.05f * i;
+                float t = 0.1f * i;
                 float r = (0.5f * acc * T1 * T1 + vel * (T2 - T1) + (vel * (t - T2) - 0.5f * acc * (t - T2) * (t - T2))) / dtheta;
                 double result = DLerp.dLerp(start, end, r);
                 joints.Add(result);
@@ -255,16 +255,16 @@ namespace DSRRobotControl
             float T3 = 2 * T2;
 
             int i;
-            for (i = 0; 0.05f * i <= T2; i++)
+            for (i = 0; 0.1f * i <= T2; i++)
             {
-                float t = 0.05f * i;
+                float t = 0.1f * i;
                 float r = (0.5f * acc * t * t) / theta;
                 Quaternion result = Quaternion.Slerp(start, end, r);
                 quats.Add(result);
             }
-            for (; 0.05f * i <= T3; i++)
+            for (; 0.1f * i <= T3; i++)
             {
-                float t = 0.05f * i;
+                float t = 0.1f * i;
                 float r = (0.5f * acc * T2 * T2 + (acc * T2 * (t - T2) - 0.5f * acc * (t - T2) * (t - T2))) / theta;
                 Quaternion result = Quaternion.Slerp(start, end, r);
                 quats.Add(result);
@@ -281,26 +281,26 @@ namespace DSRRobotControl
             float T2 = theta / vel;
             float T3 = T1 + T2;
 
-            float remainder = T3 % 0.05f;
+            float remainder = T3 % 0.1f;
 
             int i;
-            for (i = 0; 0.05f * i <= T1; i++)
+            for (i = 0; 0.1f * i <= T1; i++)
             {
-                float t = 0.05f * i;
+                float t = 0.1f * i;
                 float r = (0.5f * acc * t * t) / theta;
                 Quaternion result = Quaternion.Slerp(start, end, r);
                 quats.Add(result);
             }
-            for (; 0.05f * i <= T2; i++)
+            for (; 0.1f * i <= T2; i++)
             {
-                float t = 0.05f * i;
+                float t = 0.1f * i;
                 float r = (0.5f * acc * T1 * T1 + vel * (t - T1)) / theta;
                 Quaternion result = Quaternion.Slerp(start, end, r);
                 quats.Add(result);
             }
-            for (; 0.05f * i <= T3; i++)
+            for (; 0.1f * i <= T3; i++)
             {
-                float t = 0.05f * i;
+                float t = 0.1f * i;
                 float r = (0.5f * acc * T1 * T1 + vel * (T2 - T1) + (vel * (t - T2) - 0.5f * acc * (t - T2) * (t - T2))) / theta;
                 Quaternion result = Quaternion.Slerp(start, end, r);
                 quats.Add(result);
@@ -323,16 +323,16 @@ namespace DSRRobotControl
             float T3 = 2 * T2;
 
             int i;
-            for (i = 0; 0.05f * i <= T2; i++)
+            for (i = 0; 0.1f * i <= T2; i++)
             {
-                float t = 0.05f * i;
+                float t = 0.1f * i;
                 float r = (0.5f * acc * t * t) / dist;
                 Vector3 result = Vector3.Lerp(start, end, r);
                 pose.Add(result);
             }
-            for (; 0.05f * i <= T3; i++)
+            for (; 0.1f * i <= T3; i++)
             {
-                float t = 0.05f * i;
+                float t = 0.1f * i;
                 float r = (0.5f * acc * T2 * T2 + (acc * T2 * (t - T2) - 0.5f * acc * (t - T2) * (t - T2))) / dist;
                 Vector3 result = Vector3.Lerp(start, end, r);
                 pose.Add(result);
@@ -349,26 +349,26 @@ namespace DSRRobotControl
             float T2 = dist / vel;
             float T3 = T1 + T2;
 
-            float remainder = T3 % 0.05f;
+            float remainder = T3 % 0.1f;
 
             int i;
-            for (i = 0; 0.05f * i <= T1; i++)
+            for (i = 0; 0.1f * i <= T1; i++)
             {
-                float t = 0.05f * i;
+                float t = 0.1f * i;
                 float r = (0.5f * acc * t * t) / dist;
                 Vector3 result = Vector3.Lerp(start, end, r);
                 pose.Add(result);
             }
-            for (; 0.05f * i <= T2; i++)
+            for (; 0.1f * i <= T2; i++)
             {
-                float t = 0.05f * i;
+                float t = 0.1f * i;
                 float r = (0.5f * acc * T1 * T1 + vel * (t - T1)) / dist;
                 Vector3 result = Vector3.Lerp(start, end, r);
                 pose.Add(result);
             }
-            for (; 0.05f * i <= T3; i++)
+            for (; 0.1f * i <= T3; i++)
             {
-                float t = 0.05f * i;
+                float t = 0.1f * i;
                 float r = (0.5f * acc * T1 * T1 + vel * (T2 - T1) + (vel * (t - T2) - 0.5f * acc * (t - T2) * (t - T2))) / dist;
                 Vector3 result = Vector3.Lerp(start, end, r);
                 pose.Add(result);

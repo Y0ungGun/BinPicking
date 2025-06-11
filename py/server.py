@@ -16,7 +16,9 @@ import io
 import os
 import glob
 import time
-os.chdir("C:/Users/smsla/MultiAgent/py")
+
+#os.chdir("C:/Users/smsla/MultiAgent/py")
+os.chdir("C:/Users/dudrj/unityworkspace/RL-Bin-Picking/py")
 print(os.getcwd())
 # 모델 로드 (한 번만 실행)
 onnx_model_path = "best.onnx"
