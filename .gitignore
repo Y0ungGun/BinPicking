@@ -7,6 +7,7 @@
 [Ll]ogs/
 [Mm]emoryCaptures/
 UserSettings/
+[Ff]igures/
 .vs/
 .idea/
 *.csproj
@@ -33,3 +34,4 @@ UserSettings/
 __pycache__/
 *.pyc
 *.pyo
+
