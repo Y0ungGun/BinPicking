@@ -152,5 +152,105 @@ namespace MyMLAgents
                 return featureVector;
             }
         }
+
+        public float[] SendMsg(Component component, bool? success, byte[] image)
+        {
+            try
+            {
+                using (TcpClient client = new TcpClient(serverIP, serverPort))
+                {
+                    client.ReceiveTimeout = 5000; // 5초 (ms 단위)
+                    client.SendTimeout = 5000;
+                    using (NetworkStream stream = client.GetStream())
+                    using (StreamWriter writer = new StreamWriter(stream))
+                    using (BinaryReader reader = new BinaryReader(stream))
+                    {
+                        var comp = component.GetComponent<trainer3>();
+                        int agentId = comp.AgentID;
+                        int successValue = success.HasValue ? (success.Value ? 1 : 0) : -1;
+
+                        byte[] agentIdBytes = BitConverter.GetBytes(agentId);
+                        byte[] successBytes = BitConverter.GetBytes(successValue);
+                        byte[] imgLenBytes = BitConverter.GetBytes(image.Length);
+
+                        stream.Write(agentIdBytes, 0, 4);
+                        stream.Write(successBytes, 0, 4);
+                        stream.Write(imgLenBytes, 0, 4);
+                        stream.Write(image, 0, image.Length);
+
+                        writer.Flush();
+                        //Debug.Log("Messge sent");
+                        if (success == true)
+                            Con.material = successMat;
+                        else if (success == false)
+                            Con.material = failMat;
+                        int featureLength = reader.ReadInt32();
+                        if (featureLength <= 0 || featureLength > 1024)
+                        {
+                            Debug.LogWarning("Invalid feature vector length received: " + featureLength);
+                            return null;
+                        }
+
+                        float[] featureVector = new float[featureLength + 2];
+
+                        for (int i = 0; i < featureLength + 2; i++)
+                        {
+                            try
+                            {
+                                featureVector[i] = reader.ReadSingle();
+                            }
+                            catch (EndOfStreamException e)
+                            {
+                                // 예외 발생 시 stream의 전체 내용을 로그로 남김
+                                try
+                                {
+                                    if (stream.CanSeek)
+                                    {
+                                        stream.Position = 0;
+                                        byte[] allBytes = new byte[stream.Length];
+                                        stream.Read(allBytes, 0, allBytes.Length);
+                                        Debug.Log("Stream dump (hex): " + BitConverter.ToString(allBytes));
+                                    }
+                                    else
+                                    {
+                                        List<byte> buffer = new List<byte>();
+                                        byte[] temp = new byte[1024];
+                                        int bytesRead;
+                                        while ((bytesRead = stream.Read(temp, 0, temp.Length)) > 0)
+                                        {
+                                            buffer.AddRange(temp.Take(bytesRead));
+                                        }
+                                        Debug.Log("Stream dump (partial, hex): " + BitConverter.ToString(buffer.ToArray()));
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Debug.Log("Failed to dump stream: " + ex);
+                                }
+                                Debug.LogError($"EndOfStreamException during feature parsing at index {i}: {e}");
+                                break; // 반복문 종료
+                            }
+                            catch (IOException e)
+                            {
+                                Debug.LogError($"IOException during feature parsing at index {i}: {e}");
+                                break; // 반복문 종료
+                            }
+                        }
+                        return featureVector;
+                    }
+                }
+            }
+            catch (IOException e)
+            {
+                Debug.LogError("Network Timeout or Disconnection: " + e);
+                return null;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("Network Exception: " + e);
+                return null;
+            }
+            
+        }
     }
 }

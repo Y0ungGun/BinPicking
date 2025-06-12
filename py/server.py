@@ -16,9 +16,11 @@ import io
 import os
 import glob
 import time
+import csv
 
-#os.chdir("C:/Users/smsla/MultiAgent/py")
-os.chdir("C:/Users/dudrj/unityworkspace/RL-Bin-Picking/py")
+save_lock = threading.Lock()
+os.chdir("C:/Users/smsla/MultiAgent/py")
+#os.chdir("C:/Users/dudrj/unityworkspace/RL-Bin-Picking/py")
 print(os.getcwd())
 # 모델 로드 (한 번만 실행)
 onnx_model_path = "best.onnx"
@@ -115,7 +117,8 @@ def draw_bounding_boxes(image, detections, save_path="output.png"):
     cv2.imwrite(save_path, cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
 
 # YOLO 추론 및 NMS 적용
-def run_inference(img):
+def run_inference(img_array):
+    img = Image.fromarray(img_array.astype(np.uint8))
     img_array = preprocess_image(img)
     input_name = session.get_inputs()[0].name
     output_name = session.get_outputs()[0].name
@@ -161,20 +164,24 @@ def extract_objects(image, detections):
 
     return objects
 
-def run_graspability_model(instance_id):
+def run_graspability_model(instance_id, img_array):
     global data_no
-    img_path = os.path.join(IMAGE_PATH, f"image_{instance_id}.png")
-    img = Image.open(img_path)
-    img_array = np.array(img)
-    detections = run_inference(img)
+
+    detections = run_inference(img_array)
 
     cropped_objects = extract_objects(img_array, detections)
+    for i, obj in enumerate(cropped_objects):
+        if not isinstance(obj, np.ndarray):
+            print(f"cropped_objects[{i}] is not ndarray: {type(obj)}")
+        
     if cropped_objects:
         objects_tensor = torch.from_numpy(np.array(cropped_objects)).permute(0, 3, 1, 2).float() / 255.0
         objects_tensor = objects_tensor.to(device)
         with torch.no_grad():
             grasp_probs, feature_vectors = grasp_model(objects_tensor)
-        
+    else:
+        print(f"No objects detected in image {instance_id}.")
+
     grasp_probs_np = grasp_probs.cpu().numpy()
     best_idx = int(np.argmax(grasp_probs_np))
     best_feature = feature_vectors[best_idx].cpu().numpy()
@@ -204,6 +211,7 @@ def run_graspability_model(instance_id):
 def online_learning_from_dir(batch_size=128):
     global optimizer
     pred_dir = "online_data"
+    loss_log_path = "loss_log.csv" 
     # 피드백이 포함된 파일만 (가장 최신 128개)
     img_files = sorted(
         glob.glob(os.path.join(pred_dir, "*_[01].png")),
@@ -239,103 +247,113 @@ def online_learning_from_dir(batch_size=128):
     optimizer.step()
     grasp_model.eval()
 
-    # === best loss 체크포인트 저장 ===
-    best_loss_path = "grasp_out.pth"
-    try:
-        with open("best_loss.txt", "r") as f:
-            best_loss = float(f.read().strip())
-    except:
+    # === loss 기록 ===
+    # loss_log.csv에 (timestamp, loss) 저장
+    with save_lock:
+        import datetime
+        now = datetime.datetime.now().isoformat()
+        with open(loss_log_path, "a", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow([now, float(loss.item())])
+
+        # === best loss 체크포인트 저장 ===
         best_loss = float("inf")
-    if loss.item() < best_loss:
-        torch.save(grasp_model.output.state_dict(), best_loss_path)
-        with open("best_loss.txt", "w") as f:
-            f.write(str(loss.item()))
-        print(f"New best loss {loss.item():.4f}, checkpoint saved to {best_loss_path}")
-    else:
-        print(f"Loss {loss.item():.4f} (best: {best_loss:.4f})")
-
-    for img_file in img_files:
         try:
-            os.remove(img_file)
-        except Exception as e:
-            print(f"Failed to delete {img_file}: {e}")
+            with open(loss_log_path, "r") as f:
+                reader = csv.reader(f)
+                for row in reader:
+                    if len(row) >= 2:
+                        try:
+                            l = float(row[1])
+                            if l < best_loss:
+                                best_loss = l
+                        except:
+                            continue
+        except FileNotFoundError:
+            best_loss = float("inf")
 
-    print(f"[Online Learning] Trained on {batch_size} samples. Loss: {loss.item():.4f}")
-    torch.save(grasp_model.state_dict(), "grasp_model.pth")
+        if loss.item() < best_loss:
+            torch.save(grasp_model.output.state_dict(), "grasp_out.pth")
+            print(f"New best loss {loss.item():.4f}, checkpoint saved to grasp_out.pth")
+        else:
+            print(f"Loss {loss.item():.4f} (best: {best_loss:.4f})")
 
-def log_metrics():
-    global processed_requests
-    avg_response_time = sum(response_times) / len(response_times) if response_times else 0
-    failure_rate = (failure_count / request_count) * 100 if request_count > 0 else 0
-    gpu_memory = torch.cuda.memory_allocated() / (1024 ** 2) if torch.cuda.is_available() else 0
+        for img_file in img_files:
+            try:
+                os.remove(img_file)
+            except Exception as e:
+                print(f"Failed to delete {img_file}: {e}")
 
-    print(f"Processed Requests: {processed_requests}")
-    print(f"Average Response Time: {avg_response_time:.2f} seconds")
-    print(f"Failure Rate: {failure_rate:.2f}%")
-    print(f"GPU Memory Usage: {gpu_memory:.2f} MB")
+        print(f"[Online Learning] Trained on {batch_size} samples. Loss: {loss.item():.4f}")
+        torch.save(grasp_model.state_dict(), "grasp_model.pth")
+
+def recv_all(sock, n):
+    data = b''
+    while len(data) < n:
+        packet = sock.recv(n - len(data))
+        if not packet:
+            raise ConnectionError("Socket connection lost")
+        data += packet
+    return data
 
 def handle_client(client_socket):
-    global failure_count, request_count, processed_requests
-    start_time = time.time()
-    request_count += 1
-
-    with concurrent_clients:  # Limit concurrent clients
+    with concurrent_clients:
         try:
-            message = client_socket.recv(1024).decode("utf-8").strip()
-            if "," in message:
-                parts = message.split(",")
-                if len(parts) == 2 and parts[0].isdigit() and parts[1].isdigit():
-                    instance_id = int(parts[0])
-                    success = int(parts[1])
-                    print(f"Received instance_id: {instance_id}, success: {success}")
-                else:
-                    print(f"Invalid message: {message}")
-                    client_socket.close()
-                    failure_count += 1
-                    return
-            elif message.isdigit():
-                instance_id = int(message)
-                success = None
-                print(f"Received instance_id: {instance_id}")
-            else:
-                print(f"Invalid message: {message}")
-                client_socket.close()
-                failure_count += 1
-                return
-            if success is not None:
-                pred_dir = "online_data"
-                # 파일명 형식: {data_no}_{instance_id}_{best_prob}.png 또는 {data_no}_{instance_id}_{best_prob}_{success}.png
-                # 새롭게 바뀐 data_no를 포함한 형식에 맞춰 pattern 인식
-                pattern = os.path.join(pred_dir, f"*_{instance_id}_*.png")
-                candidates = sorted(glob.glob(pattern), key=os.path.getmtime, reverse=True)
-                for fname in candidates:
+            # 1. AgentID (4 bytes, int)
+            agent_id_bytes = recv_all(client_socket, 4)
+            agent_id = int.from_bytes(agent_id_bytes, byteorder='little', signed=True)
+            # 2. success (4 bytes, int)
+            success_bytes = recv_all(client_socket, 4)
+            success = int.from_bytes(success_bytes, byteorder='little', signed=True)
+            # 3. 이미지 길이 (4 bytes, int)
+            img_len_bytes = recv_all(client_socket, 4)
+            img_len = int.from_bytes(img_len_bytes, byteorder='little', signed=True)
+            # 4. 이미지 데이터 (img_len bytes)
+            img_bytes = recv_all(client_socket, img_len)
+            img_array = np.frombuffer(img_bytes, np.uint8)
+            img_array = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+            img_array = cv2.cvtColor(img_array, cv2.COLOR_BGR2RGB)
+            
+
+            # === success 처리 ===
+            pred_dir = "online_data"
+            if success in (0, 1):
+                # agent_id로 {success}가 없는 가장 최근 파일 찾기
+                pattern = os.path.join(pred_dir, f"*_{agent_id}_*.png")
+                candidates = sorted(
+                    [f for f in glob.glob(pattern) if not f.endswith(("_0.png", "_1.png"))],
+                    key=os.path.getmtime, reverse=True
+                )
+                if candidates:
+                    fname = candidates[0]
                     base = os.path.basename(fname)
                     parts = base.replace(".png", "").split("_")
-                    # 파일명 형식: {data_no}_{instance_id}_{best_prob}.png (success 없는 파일만 처리)
                     if len(parts) == 3:
                         data_no_str, inst_id_str, best_prob_str = parts
                         new_name = os.path.join(pred_dir, f"{data_no_str}_{inst_id_str}_{best_prob_str}_{success}.png")
                         os.rename(fname, new_name)
-                        break
 
-            response = run_graspability_model(instance_id)
+            # === 추론 및 응답 ===
+            response = run_graspability_model(agent_id, img_array)
             client_socket.sendall(response)
-            processed_requests += 1
 
-            pred_dir = "online_data"
+            # === 온라인 학습 트리거 ===
             feedback_files = glob.glob(os.path.join(pred_dir, "*_[01].png"))
-            # === 32, 64, 96, ... 개가 될 때마다 학습 ===
             if len(feedback_files) >= 128:
                 online_learning_from_dir(batch_size=128)
 
         except Exception as e:
             print(f"Client disconnected: {e}")
-            failure_count += 1
+            try:
+                dummy_feature = [0.0] * 256
+                dummy_response = struct.pack('I', 256)
+                dummy_response += struct.pack('256f', *dummy_feature)
+                dummy_response += struct.pack('2f', 0.0, 0.0)
+                client_socket.sendall(dummy_response)
+            except Exception as e2:
+                print(f"Failed to send dummy response: {e2}")
         finally:
             client_socket.close()
-            response_time = time.time() - start_time
-            response_times.append(response_time)
-            #log_metrics()
 
 
 def worker():
@@ -349,6 +367,7 @@ def worker():
 HOST = '127.0.0.1'
 PORT = 7779
 IMAGE_PATH = "./images"
+NUM_WORKERS = os.cpu_count()
 
 # GraspabilityModel 초기화
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -389,18 +408,12 @@ request_queue = Queue()
 print(f"Server listening on {HOST}:{PORT}")
 
 # Metrics tracking
-concurrent_clients = Semaphore(16)  # Limit to 4 concurrent clients (adjust as needed)
-processed_requests = 0
-request_count = 0
-failure_count = 0
-response_times = []
+concurrent_clients = Semaphore(32)  # Limit to 4 concurrent clients (adjust as needed)
 
-for _ in range(1):
+for _ in range(NUM_WORKERS):
     Thread(target=worker, daemon=True).start()
 
 while True:
     client_sock, addr = server_socket.accept()
-    # print(f"Connection from {addr}")
-    #threading.Thread(target=handle_client, args=(client_sock,)).start()
     request_queue.put(client_sock)
 

@@ -332,18 +332,18 @@ namespace MyMLAgents
 
             byte[] image = CroppedIMG.EncodeToPNG();
 
-            string fileName = Path.Combine(Directory.GetParent(Application.dataPath).FullName,"py","images",$"image_{component.GetComponent<trainer3>().AgentID}.png");
+            //string fileName = Path.Combine(Directory.GetParent(Application.dataPath).FullName,"py","images",$"image_{component.GetComponent<trainer3>().AgentID}.png");
 
 
-            File.WriteAllBytes(fileName, image);
+            //File.WriteAllBytes(fileName, image);
             //Debug.Log("Image saved to captured_image.png");
-            float[] featureVector = socket.SendMsgv3(component, success);
+            float[] featureVector = socket.SendMsg(component, success, image);
 
             UnityEngine.Object.Destroy(fullTexture);
             renderTexture.Release();
             UnityEngine.Object.Destroy(renderTexture);
             UnityEngine.Object.Destroy(CroppedIMG);
-            // isSent = true;
+
             return featureVector;
         }
     }

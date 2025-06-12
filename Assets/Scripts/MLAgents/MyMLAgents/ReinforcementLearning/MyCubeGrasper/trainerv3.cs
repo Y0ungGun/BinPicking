@@ -12,6 +12,7 @@ using Unity.MLAgents.Actuators;
 using System.Linq;
 using TMPro;
 using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
+using UnityEditor;
 
 namespace MyMLAgents
 {
@@ -84,17 +85,18 @@ namespace MyMLAgents
             Episode = Episode + 1f;
             SetInitial();
             cs.SpawnCubes();
-            StartCoroutine(StartwithDelay());
+            // StartCoroutine(StartwithDelay());
+            StartwithDelay();
         }
-        private IEnumerator StartwithDelay()
+        private void StartwithDelay()
         {
             Utils.MoveToInitialPosition(transform);
-            yield return new WaitForSeconds(4.0f);
+            //yield return new WaitForSeconds(4.0f);
             Objects = transform.parent.Find("Objects")?.gameObject;
             EpisodeLength = Objects.transform.childCount;
             Utils.FreezeObjects(Objects);
             Utils.UnFreezeObjects(Objects);
-            yield return new WaitForSeconds(1.0f);
+            //yield return new WaitForSeconds(1.0f);
             ReadyToObserve = true; isActionInProgress = false;
         }
         public override void CollectObservations(VectorSensor sensor)
@@ -127,7 +129,7 @@ namespace MyMLAgents
         private void FixedUpdate()
         {
             counter++;
-            if (counter >= 5) // 0.02ÃÊ ¡¿ 5 = 0.1ÃÊ
+            if (counter >= 5) // 0.02ï¿½ï¿½ ï¿½ï¿½ 5 = 0.1ï¿½ï¿½
             {
                 counter = 0;
                 if (isMovingTarget)
@@ -178,7 +180,7 @@ namespace MyMLAgents
                         Utils.MoveToInitialPosition(transform);
                         isActionInProgress = false;
 
-                        if (Objects.transform.childCount == 0)
+                        if (Objects.transform.childCount == 1)
                         {
                             Debug.Log($"Reward for Episode{Episode}: {EpisodeReward}");
                             EndEpisode();
