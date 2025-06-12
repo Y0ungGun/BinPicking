@@ -19,8 +19,8 @@ import time
 import csv
 
 save_lock = threading.Lock()
-os.chdir("C:/Users/smsla/MultiAgent/py")
-#os.chdir("C:/Users/dudrj/unityworkspace/RL-Bin-Picking/py")
+#os.chdir("C:/Users/smsla/MultiAgent/py")
+os.chdir("C:/Users/dudrj/unityworkspace/RL-Bin-Picking/py")
 print(os.getcwd())
 # 모델 로드 (한 번만 실행)
 onnx_model_path = "best.onnx"
@@ -298,6 +298,7 @@ def recv_all(sock, n):
 
 def handle_client(client_socket):
     with concurrent_clients:
+        comm_start = time.time() 
         try:
             # 1. AgentID (4 bytes, int)
             agent_id_bytes = recv_all(client_socket, 4)
@@ -334,9 +335,13 @@ def handle_client(client_socket):
                         os.rename(fname, new_name)
 
             # === 추론 및 응답 ===
+            infer_start = time.time()
             response = run_graspability_model(agent_id, img_array)
+            infer_end = time.time() 
             client_socket.sendall(response)
+            comm_end = time.time()
 
+            print(f"Agent {agent_id} processed in {comm_end - comm_start:.2f}s (Inference: {infer_end - infer_start:.2f}s, Comm: {comm_end - comm_start - (infer_end - infer_start):.2f}s)")
             # === 온라인 학습 트리거 ===
             feedback_files = glob.glob(os.path.join(pred_dir, "*_[01].png"))
             if len(feedback_files) >= 128:

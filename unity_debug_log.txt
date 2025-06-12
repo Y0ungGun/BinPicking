@@ -1999,3 +1999,113 @@ Unity.MLAgents.Agent:EndEpisodeAndReset (Unity.MLAgents.Agent/DoneReason) (at ./
 Unity.MLAgents.Agent:EndEpisode () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Agent.cs:808)
 MyMLAgents.trainer3:FixedUpdate () (at Assets/Scripts/MLAgents/MyMLAgents/ReinforcementLearning/MyCubeGrasper/trainerv3.cs:186)
 
+Heuristic method called but not implemented. Returning placeholder actions.
+UnityEngine.Debug:LogWarning (object)
+Unity.MLAgents.Agent:Heuristic (Unity.MLAgents.Actuators.ActionBuffers modreq(System.Runtime.InteropServices.InAttribute)&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Agent.cs:977)
+Unity.MLAgents.Actuators.VectorActuator:Heuristic (Unity.MLAgents.Actuators.ActionBuffers&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Actuators/VectorActuator.cs:83)
+Unity.MLAgents.Actuators.VectorActuator:Unity.MLAgents.Actuators.IHeuristicProvider.Heuristic (Unity.MLAgents.Actuators.ActionBuffers modreq(System.Runtime.InteropServices.InAttribute)&)
+Unity.MLAgents.Actuators.ActuatorManager:ApplyHeuristic (Unity.MLAgents.Actuators.ActionBuffers&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Actuators/ActuatorManager.cs:250)
+Unity.MLAgents.Policies.HeuristicPolicy:DecideAction () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Policies/HeuristicPolicy.cs:49)
+Unity.MLAgents.Agent:DecideAction () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Agent.cs:1411)
+Unity.MLAgents.Academy:EnvironmentStep () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Academy.cs:590)
+MyMLAgents.trainingManager3:Update () (at Assets/Scripts/MLAgents/MyMLAgents/ReinforcementLearning/MyCubeGrasper/trainingManager3.cs:25)
+
+Heuristic method called but not implemented. Returning placeholder actions.
+UnityEngine.Debug:LogWarning (object)
+Unity.MLAgents.Agent:Heuristic (Unity.MLAgents.Actuators.ActionBuffers modreq(System.Runtime.InteropServices.InAttribute)&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Agent.cs:977)
+Unity.MLAgents.Actuators.VectorActuator:Heuristic (Unity.MLAgents.Actuators.ActionBuffers&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Actuators/VectorActuator.cs:83)
+Unity.MLAgents.Actuators.VectorActuator:Unity.MLAgents.Actuators.IHeuristicProvider.Heuristic (Unity.MLAgents.Actuators.ActionBuffers modreq(System.Runtime.InteropServices.InAttribute)&)
+Unity.MLAgents.Actuators.ActuatorManager:ApplyHeuristic (Unity.MLAgents.Actuators.ActionBuffers&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Actuators/ActuatorManager.cs:250)
+Unity.MLAgents.Policies.HeuristicPolicy:DecideAction () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Policies/HeuristicPolicy.cs:49)
+Unity.MLAgents.Agent:DecideAction () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Agent.cs:1411)
+Unity.MLAgents.Academy:EnvironmentStep () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Academy.cs:590)
+MyMLAgents.trainingManager3:Update () (at Assets/Scripts/MLAgents/MyMLAgents/ReinforcementLearning/MyCubeGrasper/trainingManager3.cs:25)
+
+Heuristic method called but not implemented. Returning placeholder actions.
+UnityEngine.Debug:LogWarning (object)
+Unity.MLAgents.Agent:Heuristic (Unity.MLAgents.Actuators.ActionBuffers modreq(System.Runtime.InteropServices.InAttribute)&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Agent.cs:977)
+Unity.MLAgents.Actuators.VectorActuator:Heuristic (Unity.MLAgents.Actuators.ActionBuffers&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Actuators/VectorActuator.cs:83)
+Unity.MLAgents.Actuators.VectorActuator:Unity.MLAgents.Actuators.IHeuristicProvider.Heuristic (Unity.MLAgents.Actuators.ActionBuffers modreq(System.Runtime.InteropServices.InAttribute)&)
+Unity.MLAgents.Actuators.ActuatorManager:ApplyHeuristic (Unity.MLAgents.Actuators.ActionBuffers&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Actuators/ActuatorManager.cs:250)
+Unity.MLAgents.Policies.HeuristicPolicy:DecideAction () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Policies/HeuristicPolicy.cs:49)
+Unity.MLAgents.Agent:DecideAction () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Agent.cs:1411)
+Unity.MLAgents.Academy:EnvironmentStep () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Academy.cs:590)
+MyMLAgents.trainingManager3:Update () (at Assets/Scripts/MLAgents/MyMLAgents/ReinforcementLearning/MyCubeGrasper/trainingManager3.cs:25)
+
+Heuristic method called but not implemented. Returning placeholder actions.
+UnityEngine.Debug:LogWarning (object)
+Unity.MLAgents.Agent:Heuristic (Unity.MLAgents.Actuators.ActionBuffers modreq(System.Runtime.InteropServices.InAttribute)&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Agent.cs:977)
+Unity.MLAgents.Actuators.VectorActuator:Heuristic (Unity.MLAgents.Actuators.ActionBuffers&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Actuators/VectorActuator.cs:83)
+Unity.MLAgents.Actuators.VectorActuator:Unity.MLAgents.Actuators.IHeuristicProvider.Heuristic (Unity.MLAgents.Actuators.ActionBuffers modreq(System.Runtime.InteropServices.InAttribute)&)
+Unity.MLAgents.Actuators.ActuatorManager:ApplyHeuristic (Unity.MLAgents.Actuators.ActionBuffers&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Actuators/ActuatorManager.cs:250)
+Unity.MLAgents.Policies.HeuristicPolicy:DecideAction () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Policies/HeuristicPolicy.cs:49)
+Unity.MLAgents.Agent:DecideAction () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Agent.cs:1411)
+Unity.MLAgents.Academy:EnvironmentStep () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Academy.cs:590)
+MyMLAgents.trainingManager3:Update () (at Assets/Scripts/MLAgents/MyMLAgents/ReinforcementLearning/MyCubeGrasper/trainingManager3.cs:25)
+
+Heuristic method called but not implemented. Returning placeholder actions.
+UnityEngine.Debug:LogWarning (object)
+Unity.MLAgents.Agent:Heuristic (Unity.MLAgents.Actuators.ActionBuffers modreq(System.Runtime.InteropServices.InAttribute)&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Agent.cs:977)
+Unity.MLAgents.Actuators.VectorActuator:Heuristic (Unity.MLAgents.Actuators.ActionBuffers&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Actuators/VectorActuator.cs:83)
+Unity.MLAgents.Actuators.VectorActuator:Unity.MLAgents.Actuators.IHeuristicProvider.Heuristic (Unity.MLAgents.Actuators.ActionBuffers modreq(System.Runtime.InteropServices.InAttribute)&)
+Unity.MLAgents.Actuators.ActuatorManager:ApplyHeuristic (Unity.MLAgents.Actuators.ActionBuffers&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Actuators/ActuatorManager.cs:250)
+Unity.MLAgents.Policies.HeuristicPolicy:DecideAction () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Policies/HeuristicPolicy.cs:49)
+Unity.MLAgents.Agent:DecideAction () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Agent.cs:1411)
+Unity.MLAgents.Academy:EnvironmentStep () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Academy.cs:590)
+MyMLAgents.trainingManager3:Update () (at Assets/Scripts/MLAgents/MyMLAgents/ReinforcementLearning/MyCubeGrasper/trainingManager3.cs:25)
+
+Heuristic method called but not implemented. Returning placeholder actions.
+UnityEngine.Debug:LogWarning (object)
+Unity.MLAgents.Agent:Heuristic (Unity.MLAgents.Actuators.ActionBuffers modreq(System.Runtime.InteropServices.InAttribute)&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Agent.cs:977)
+Unity.MLAgents.Actuators.VectorActuator:Heuristic (Unity.MLAgents.Actuators.ActionBuffers&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Actuators/VectorActuator.cs:83)
+Unity.MLAgents.Actuators.VectorActuator:Unity.MLAgents.Actuators.IHeuristicProvider.Heuristic (Unity.MLAgents.Actuators.ActionBuffers modreq(System.Runtime.InteropServices.InAttribute)&)
+Unity.MLAgents.Actuators.ActuatorManager:ApplyHeuristic (Unity.MLAgents.Actuators.ActionBuffers&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Actuators/ActuatorManager.cs:250)
+Unity.MLAgents.Policies.HeuristicPolicy:DecideAction () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Policies/HeuristicPolicy.cs:49)
+Unity.MLAgents.Agent:DecideAction () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Agent.cs:1411)
+Unity.MLAgents.Academy:EnvironmentStep () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Academy.cs:590)
+MyMLAgents.trainingManager3:Update () (at Assets/Scripts/MLAgents/MyMLAgents/ReinforcementLearning/MyCubeGrasper/trainingManager3.cs:25)
+
+Heuristic method called but not implemented. Returning placeholder actions.
+UnityEngine.Debug:LogWarning (object)
+Unity.MLAgents.Agent:Heuristic (Unity.MLAgents.Actuators.ActionBuffers modreq(System.Runtime.InteropServices.InAttribute)&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Agent.cs:977)
+Unity.MLAgents.Actuators.VectorActuator:Heuristic (Unity.MLAgents.Actuators.ActionBuffers&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Actuators/VectorActuator.cs:83)
+Unity.MLAgents.Actuators.VectorActuator:Unity.MLAgents.Actuators.IHeuristicProvider.Heuristic (Unity.MLAgents.Actuators.ActionBuffers modreq(System.Runtime.InteropServices.InAttribute)&)
+Unity.MLAgents.Actuators.ActuatorManager:ApplyHeuristic (Unity.MLAgents.Actuators.ActionBuffers&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Actuators/ActuatorManager.cs:250)
+Unity.MLAgents.Policies.HeuristicPolicy:DecideAction () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Policies/HeuristicPolicy.cs:49)
+Unity.MLAgents.Agent:DecideAction () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Agent.cs:1411)
+Unity.MLAgents.Academy:EnvironmentStep () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Academy.cs:590)
+MyMLAgents.trainingManager3:Update () (at Assets/Scripts/MLAgents/MyMLAgents/ReinforcementLearning/MyCubeGrasper/trainingManager3.cs:25)
+
+Heuristic method called but not implemented. Returning placeholder actions.
+UnityEngine.Debug:LogWarning (object)
+Unity.MLAgents.Agent:Heuristic (Unity.MLAgents.Actuators.ActionBuffers modreq(System.Runtime.InteropServices.InAttribute)&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Agent.cs:977)
+Unity.MLAgents.Actuators.VectorActuator:Heuristic (Unity.MLAgents.Actuators.ActionBuffers&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Actuators/VectorActuator.cs:83)
+Unity.MLAgents.Actuators.VectorActuator:Unity.MLAgents.Actuators.IHeuristicProvider.Heuristic (Unity.MLAgents.Actuators.ActionBuffers modreq(System.Runtime.InteropServices.InAttribute)&)
+Unity.MLAgents.Actuators.ActuatorManager:ApplyHeuristic (Unity.MLAgents.Actuators.ActionBuffers&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Actuators/ActuatorManager.cs:250)
+Unity.MLAgents.Policies.HeuristicPolicy:DecideAction () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Policies/HeuristicPolicy.cs:49)
+Unity.MLAgents.Agent:DecideAction () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Agent.cs:1411)
+Unity.MLAgents.Academy:EnvironmentStep () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Academy.cs:590)
+MyMLAgents.trainingManager3:Update () (at Assets/Scripts/MLAgents/MyMLAgents/ReinforcementLearning/MyCubeGrasper/trainingManager3.cs:25)
+
+Heuristic method called but not implemented. Returning placeholder actions.
+UnityEngine.Debug:LogWarning (object)
+Unity.MLAgents.Agent:Heuristic (Unity.MLAgents.Actuators.ActionBuffers modreq(System.Runtime.InteropServices.InAttribute)&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Agent.cs:977)
+Unity.MLAgents.Actuators.VectorActuator:Heuristic (Unity.MLAgents.Actuators.ActionBuffers&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Actuators/VectorActuator.cs:83)
+Unity.MLAgents.Actuators.VectorActuator:Unity.MLAgents.Actuators.IHeuristicProvider.Heuristic (Unity.MLAgents.Actuators.ActionBuffers modreq(System.Runtime.InteropServices.InAttribute)&)
+Unity.MLAgents.Actuators.ActuatorManager:ApplyHeuristic (Unity.MLAgents.Actuators.ActionBuffers&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Actuators/ActuatorManager.cs:250)
+Unity.MLAgents.Policies.HeuristicPolicy:DecideAction () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Policies/HeuristicPolicy.cs:49)
+Unity.MLAgents.Agent:DecideAction () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Agent.cs:1411)
+Unity.MLAgents.Academy:EnvironmentStep () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Academy.cs:590)
+MyMLAgents.trainingManager3:Update () (at Assets/Scripts/MLAgents/MyMLAgents/ReinforcementLearning/MyCubeGrasper/trainingManager3.cs:25)
+
+Heuristic method called but not implemented. Returning placeholder actions.
+UnityEngine.Debug:LogWarning (object)
+Unity.MLAgents.Agent:Heuristic (Unity.MLAgents.Actuators.ActionBuffers modreq(System.Runtime.InteropServices.InAttribute)&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Agent.cs:977)
+Unity.MLAgents.Actuators.VectorActuator:Heuristic (Unity.MLAgents.Actuators.ActionBuffers&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Actuators/VectorActuator.cs:83)
+Unity.MLAgents.Actuators.VectorActuator:Unity.MLAgents.Actuators.IHeuristicProvider.Heuristic (Unity.MLAgents.Actuators.ActionBuffers modreq(System.Runtime.InteropServices.InAttribute)&)
+Unity.MLAgents.Actuators.ActuatorManager:ApplyHeuristic (Unity.MLAgents.Actuators.ActionBuffers&) (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Actuators/ActuatorManager.cs:250)
+Unity.MLAgents.Policies.HeuristicPolicy:DecideAction () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Policies/HeuristicPolicy.cs:49)
+Unity.MLAgents.Agent:DecideAction () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Agent.cs:1411)
+Unity.MLAgents.Academy:EnvironmentStep () (at ./Library/PackageCache/com.unity.ml-agents/Runtime/Academy.cs:590)
+MyMLAgents.trainingManager3:Update () (at Assets/Scripts/MLAgents/MyMLAgents/ReinforcementLearning/MyCubeGrasper/trainingManager3.cs:25)
+

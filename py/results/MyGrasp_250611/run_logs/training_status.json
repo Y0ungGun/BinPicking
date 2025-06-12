@@ -2,24 +2,6 @@
     "MyGrasp": {
         "checkpoints": [
             {
-                "steps": 3499,
-                "file_path": "results\\MyGrasp_250611\\MyGrasp\\MyGrasp-3499.onnx",
-                "reward": null,
-                "creation_time": 1749636552.0579536,
-                "auxillary_file_paths": [
-                    "results\\MyGrasp_250611\\MyGrasp\\MyGrasp-3499.pt"
-                ]
-            },
-            {
-                "steps": 3519,
-                "file_path": "results\\MyGrasp_250611\\MyGrasp\\MyGrasp-3519.onnx",
-                "reward": null,
-                "creation_time": 1749636557.0892427,
-                "auxillary_file_paths": [
-                    "results\\MyGrasp_250611\\MyGrasp\\MyGrasp-3519.pt"
-                ]
-            },
-            {
                 "steps": 3544,
                 "file_path": "results\\MyGrasp_250611\\MyGrasp\\MyGrasp-3544.onnx",
                 "reward": null,
@@ -45,15 +27,33 @@
                 "auxillary_file_paths": [
                     "results\\MyGrasp_250611\\MyGrasp\\MyGrasp-3717.pt"
                 ]
+            },
+            {
+                "steps": 3999,
+                "file_path": "results\\MyGrasp_250611\\MyGrasp\\MyGrasp-3999.onnx",
+                "reward": null,
+                "creation_time": 1749690477.7381165,
+                "auxillary_file_paths": [
+                    "results\\MyGrasp_250611\\MyGrasp\\MyGrasp-3999.pt"
+                ]
+            },
+            {
+                "steps": 4009,
+                "file_path": "results\\MyGrasp_250611\\MyGrasp\\MyGrasp-4009.onnx",
+                "reward": null,
+                "creation_time": 1749690545.5120122,
+                "auxillary_file_paths": [
+                    "results\\MyGrasp_250611\\MyGrasp\\MyGrasp-4009.pt"
+                ]
             }
         ],
         "final_checkpoint": {
-            "steps": 3717,
+            "steps": 4009,
             "file_path": "results\\MyGrasp_250611\\MyGrasp.onnx",
             "reward": null,
-            "creation_time": 1749641325.172798,
+            "creation_time": 1749690545.5120122,
             "auxillary_file_paths": [
-                "results\\MyGrasp_250611\\MyGrasp\\MyGrasp-3717.pt"
+                "results\\MyGrasp_250611\\MyGrasp\\MyGrasp-4009.pt"
             ]
         }
     },
