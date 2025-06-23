@@ -80,8 +80,7 @@ namespace MyMLAgents
                 // 범위 벗어났는지 확인
                 if (!IsWithinRange(pos))
                 {
-                    Debug.Log($"Deleting {child.name} at {pos} (out of bounds)");
-                    GameObject.Destroy(child.gameObject);
+                    Destroy(child.gameObject);
                 }
             }
         }

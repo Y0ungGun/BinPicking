@@ -19,12 +19,13 @@ import time
 import csv
 
 save_lock = threading.Lock()
-#os.chdir("C:/Users/smsla/MultiAgent/py")
-os.chdir("C:/Users/dudrj/unityworkspace/RL-Bin-Picking/py")
+os.chdir("C:/Users/smsla/MultiAgent/py")
+#os.chdir("C:/Users/dudrj/unityworkspace/RL-Bin-Picking/py")
 print(os.getcwd())
 # 모델 로드 (한 번만 실행)
 onnx_model_path = "best.onnx"
-session = ort.InferenceSession(onnx_model_path)
+session = ort.InferenceSession(onnx_model_path, providers=['CUDAExecutionProvider'])
+print(session.get_providers())
 
 class GraspabilityModel(nn.Module):
     def __init__(self, feature_dim=256):
@@ -57,12 +58,10 @@ class GraspabilityModel(nn.Module):
 
 # 이미지 전처리 함수
 def preprocess_image(image):
-    transform = T.Compose([
-        T.Resize(736),
-        T.ToTensor()
-    ])
-    img_tensor = transform(image).unsqueeze(0)
-    return img_tensor.numpy()
+    img = cv2.resize(image, (736, 736))
+    img = img.astype(np.float32) / 255.0
+    img = np.transpose(img, (2, 0, 1))
+    return img[np.newaxis, :]
 
 def clean_online_data():
     save_dir = "online_data"
@@ -118,8 +117,8 @@ def draw_bounding_boxes(image, detections, save_path="output.png"):
 
 # YOLO 추론 및 NMS 적용
 def run_inference(img_array):
-    img = Image.fromarray(img_array.astype(np.uint8))
-    img_array = preprocess_image(img)
+    #img = Image.fromarray(img_array.astype(np.uint8))
+    img_array = preprocess_image(img_array)
     input_name = session.get_inputs()[0].name
     output_name = session.get_outputs()[0].name
     raw_output = session.run([output_name], {input_name: img_array.astype(np.float32)})
@@ -167,8 +166,11 @@ def extract_objects(image, detections):
 def run_graspability_model(instance_id, img_array):
     global data_no
 
+    yolo_start = time.time()
     detections = run_inference(img_array)
+    yolo_end = time.time()
 
+    grasp_start = time.time()
     cropped_objects = extract_objects(img_array, detections)
     for i, obj in enumerate(cropped_objects):
         if not isinstance(obj, np.ndarray):
@@ -179,6 +181,7 @@ def run_graspability_model(instance_id, img_array):
         objects_tensor = objects_tensor.to(device)
         with torch.no_grad():
             grasp_probs, feature_vectors = grasp_model(objects_tensor)
+        
     else:
         print(f"No objects detected in image {instance_id}.")
 
@@ -204,7 +207,8 @@ def run_graspability_model(instance_id, img_array):
     save_path = os.path.join(save_dir, f"{data_no}_{instance_id}_{best_prob:.4f}.png")
     data_no += 1
     cv2.imwrite(save_path, cv2.cvtColor(best_img, cv2.COLOR_RGB2BGR))
-
+    grasp_end = time.time()
+    print(f"[Timing] YOLO inference: {yolo_end - yolo_start:.4f}s, Graspability model inference: {grasp_end - grasp_start:.4f}s, Graspability Model Inference Count: {len(cropped_objects)}")
     return response
 
 
@@ -272,7 +276,7 @@ def online_learning_from_dir(batch_size=128):
         except FileNotFoundError:
             best_loss = float("inf")
 
-        if loss.item() < best_loss:
+        if loss.item() <= best_loss:
             torch.save(grasp_model.output.state_dict(), "grasp_out.pth")
             print(f"New best loss {loss.item():.4f}, checkpoint saved to grasp_out.pth")
         else:
@@ -285,7 +289,6 @@ def online_learning_from_dir(batch_size=128):
                 print(f"Failed to delete {img_file}: {e}")
 
         print(f"[Online Learning] Trained on {batch_size} samples. Loss: {loss.item():.4f}")
-        torch.save(grasp_model.state_dict(), "grasp_model.pth")
 
 def recv_all(sock, n):
     data = b''
@@ -340,8 +343,8 @@ def handle_client(client_socket):
             infer_end = time.time() 
             client_socket.sendall(response)
             comm_end = time.time()
-
-            print(f"Agent {agent_id} processed in {comm_end - comm_start:.2f}s (Inference: {infer_end - infer_start:.2f}s, Comm: {comm_end - comm_start - (infer_end - infer_start):.2f}s)")
+            if (infer_end - infer_start) > 0.07:
+                print(f"Agent {agent_id} processed in {comm_end - comm_start:.2f}s (Inference: {infer_end - infer_start:.2f}s, Comm: {comm_end - comm_start - (infer_end - infer_start):.2f}s)")
             # === 온라인 학습 트리거 ===
             feedback_files = glob.glob(os.path.join(pred_dir, "*_[01].png"))
             if len(feedback_files) >= 128:
@@ -353,7 +356,7 @@ def handle_client(client_socket):
                 dummy_feature = [0.0] * 256
                 dummy_response = struct.pack('I', 256)
                 dummy_response += struct.pack('256f', *dummy_feature)
-                dummy_response += struct.pack('2f', 0.0, 0.0)
+                dummy_response += struct.pack('2f', 736//2, 736//2)
                 client_socket.sendall(dummy_response)
             except Exception as e2:
                 print(f"Failed to send dummy response: {e2}")
@@ -372,7 +375,7 @@ def worker():
 HOST = '127.0.0.1'
 PORT = 7779
 IMAGE_PATH = "./images"
-NUM_WORKERS = os.cpu_count()
+NUM_WORKERS = 1
 
 # GraspabilityModel 초기화
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

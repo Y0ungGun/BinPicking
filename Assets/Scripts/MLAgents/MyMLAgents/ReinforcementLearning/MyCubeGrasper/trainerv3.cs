@@ -87,6 +87,7 @@ namespace MyMLAgents
             cs.SpawnCubes();
             // StartCoroutine(StartwithDelay());
             StartwithDelay();
+            cs.DeleteOutlier(Objects);
         }
         private void StartwithDelay()
         {
@@ -103,7 +104,6 @@ namespace MyMLAgents
         {
             if (ReadyToObserve)
             {
-                cs.DeleteOutlier(Objects);
                 _reward = 0f;
 
                 isActionInProgress = true;
@@ -134,9 +134,16 @@ namespace MyMLAgents
                 counter = 0;
                 if (isMovingTarget)
                 {
-                    trainerUtils.SetEachJointPositions(TargetArray, idx, links);
-                    idx++;
-                    if (idx == TargetArray.Count / 6)
+                    try
+                    {
+                        if (idx >= TargetArray.Count / 6)
+                        {
+                            throw new Exception();
+                        }
+                        trainerUtils.SetEachJointPositions(TargetArray, idx, links);
+                        idx++;
+                    }
+                    catch
                     {
                         DownArray = trainerUtils.GetMArray(XYZDown.x, XYZDown.y, XYZDown.z, rx, ry, rz, 1.0f, links);
                         isMovingTarget = false;
@@ -146,9 +153,16 @@ namespace MyMLAgents
                 }
                 if (isMovingDown)
                 {
-                    trainerUtils.SetEachJointPositions(DownArray, idx, links);
-                    idx++;
-                    if (idx == DownArray.Count / 6)
+                    try
+                    {
+                        if (idx >= DownArray.Count / 6)
+                        {
+                            throw new Exception();
+                        }
+                        trainerUtils.SetEachJointPositions(DownArray, idx, links);
+                        idx++;
+                    }
+                    catch
                     {
                         isMovingDown = false;
                         isGrasping = true;
@@ -157,8 +171,6 @@ namespace MyMLAgents
                 }
                 if (isGrasping)
                 {
-                    closeTargetGripper.ButtonClicked = true;
-                    idx++;
                     if (idx >= 30)
                     {
                         UpArray = trainerUtils.GetJArray(0, 0, 1.05f, 0, 2.1f, 0, 2.0f, links);
@@ -166,16 +178,27 @@ namespace MyMLAgents
                         isMovingUp = true;
                         idx = 0;
                     }
+                    else
+                    {
+                        closeTargetGripper.ButtonClicked = true;
+                        idx++;
+                    }
                 }
                 if (isMovingUp)
                 {
-                    trainerUtils.SetEachJointPositions(UpArray, idx, links);
-                    idx++;
-                    if (idx == UpArray.Count / 6)
+                    try
+                    {
+                        if (idx >= UpArray.Count / 6)
+                        {
+                            throw new Exception();
+                        }
+                        trainerUtils.SetEachJointPositions(UpArray, idx, links);
+                        idx++;
+                    }
+                    catch
                     {
                         isMovingUp = false;
                         EvaluateReward();
-                        Destroy(target);
                         closeTargetGripper.ButtonClicked = false;
                         Utils.MoveToInitialPosition(transform);
                         isActionInProgress = false;
@@ -328,16 +351,27 @@ namespace MyMLAgents
         }
         private void EvaluateReward()
         {
-            //_reward += -r_dist;
-
-
-            if (target.transform.position.y >= 0.3f)
+            if (target != null && target.transform != null)
             {
-                _reward += 1.0f;
-                EpisodeReward += 1.0f;
-                _success = true;
+                if (target.transform.position.y >= 3f)
+                {
+                    _reward += 1.0f;
+                    EpisodeReward += 1.0f;
+                    _success = true;
+                }
+                else
+                {
+                    _success = false;
+                }
+
+                Destroy(target);
+                cs.DeleteOutlier(Objects);
             }
-            else { _success = false; }
+            else
+            {
+                _success = false;
+                Debug.LogWarning("EvaluateReward: target is null or already destroyed.");
+            }
 
             SetReward(_reward);
         }
