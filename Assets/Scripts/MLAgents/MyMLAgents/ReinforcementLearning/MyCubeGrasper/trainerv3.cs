@@ -13,6 +13,7 @@ using System.Linq;
 using TMPro;
 using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 using UnityEditor;
+using GripperGWS;
 
 namespace MyMLAgents
 {
@@ -32,6 +33,8 @@ namespace MyMLAgents
         private ArticulationBody[] links;
         private ArticulationBody[] grips;
         private CubeSpawn cs;
+        private WrenchConvexHull GWS;
+
 
         private Vector3 XYZDown;
 
@@ -43,7 +46,6 @@ namespace MyMLAgents
         private int idx = 0;
         private float _w = 0.25f;
         private float _reward;
-        private float r_dist;
         private float x_ = 0;
         private float y_ = 0;
         private bool ReadyToObserve = false;    
@@ -74,6 +76,7 @@ namespace MyMLAgents
             depthCamera = transform.parent.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == "IntelCameraDepth")?.GetComponent<Camera>();
             closeTargetGripper = transform.parent.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == "GripperControl")?.GetComponent<CloseTargetGripper>();
             agentCamera = transform.parent.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == "TargetCam")?.GetComponentInChildren<Camera>();
+            GWS = GetComponent<WrenchConvexHull>();
             cs = gameObject.GetComponent<CubeSpawn>();  
 
 
@@ -230,6 +233,9 @@ namespace MyMLAgents
             target = Utils.FindTarget(Objects, TargetPosition.x, TargetPosition.z);
             //Debug.Log($"WorldPosition: x:{TargetPosition.x}, y: {TargetPosition.y}, z: {TargetPosition.z}");
             //Debug.Log($"Received Action: {actions.ContinuousActions[0]}, {actions.ContinuousActions[1]}, {actions.ContinuousActions[2]}, {actions.ContinuousActions[3]}, {actions.ContinuousActions[4]}, {actions.ContinuousActions[5]}");
+            target.name = "target";
+            target.AddComponent<TargetContact>();
+            GWS.SetTargetContact(target);
 
             x = TargetPosition.x + x_offset + _w * actions.ContinuousActions[0];
             y = TargetPosition.z + z_offset + _w * actions.ContinuousActions[1];
@@ -245,133 +251,40 @@ namespace MyMLAgents
 
             TargetArray = trainerUtils.GetMArray(x, y, z, rx, ry, rz, 2.0f, links);
         }
-        private IEnumerator PerformAction(ActionBuffers actions)
-        {
-            int x_offset = (int)(AgentID / 8) * 20;
-            int z_offset = - (AgentID % 8) * 15;
-            Vector3 TargetPosition = trainerUtils.GetWorldXYZv3(x_, y_, depthCamera);
 
-            target = Utils.FindTarget(Objects, TargetPosition.x, TargetPosition.z);
-            //Debug.Log($"WorldPosition: x:{TargetPosition.x}, y: {TargetPosition.y}, z: {TargetPosition.z}");
-            //Debug.Log($"Received Action: {actions.ContinuousActions[0]}, {actions.ContinuousActions[1]}, {actions.ContinuousActions[2]}, {actions.ContinuousActions[3]}, {actions.ContinuousActions[4]}, {actions.ContinuousActions[5]}");
-            yield return new WaitForSeconds(1f);
-            float x = TargetPosition.x + x_offset + _w * actions.ContinuousActions[0];
-            float y = TargetPosition.z + z_offset + _w * actions.ContinuousActions[1];
-            float z = TargetPosition.y + 0.2f + 0.2f * _w * actions.ContinuousActions[2];
-            x = 0.1f * x;
-            y = 0.1f * y;
-            z = 0.1f * z;
-            float rx = actions.ContinuousActions[3] * 1.5f;
-            float ry = actions.ContinuousActions[4] * 0.75f + 3.14f;
-            float rz = actions.ContinuousActions[5] * 0.75f + 1.57f;
-
-            // Move To Target
-            List<double> MoveTarget = trainerUtils.GetMArray(x, y, z, rx, ry, rz, 2.0f, links);
-            for (int i = 0; i < MoveTarget.Count / 6; i++)
-            {
-                try
-                {
-                    trainerUtils.SetEachJointPositions(MoveTarget, i, links);
-                }
-                catch
-                {
-                    continue;
-                }
-                yield return new WaitForSeconds(0.05f);
-            }
-            yield return new WaitForSeconds(0.1f);
-
-            // Move Downward
-            Vector3 XYZDown = Utils.LocalMovement(x, y, z, rx, ry, rz, true, EndEffector);
-            
-            List<double> MoveDown = trainerUtils.GetMArray(XYZDown.x, XYZDown.y, XYZDown.z, rx, ry, rz, 1.0f, links);
-            for (int j = 0; j < MoveDown.Count / 6; j++)
-            {
-                try
-                {
-                    trainerUtils.SetEachJointPositions(MoveDown, j, links);
-                }
-                catch
-                {
-                    continue;
-                }
-                yield return new WaitForSeconds(0.05f);
-            }
-            yield return new WaitForSeconds(0.1f);
-            r_dist = EvaluateDistance();
-
-            // Close Gripper
-            closeTargetGripper.ButtonClicked = true;
-            yield return new WaitForSeconds(3.5f);
-
-            // Move Upward
-            Vector3 XYZUp = Utils.LocalMovement(x, y, z, rx, ry, rz, false, EndEffector);
-            List<double> MoveUp = trainerUtils.GetJArray(0, 0, 1.57f, 0, 1.57f, 0, 2.0f, links);
-            for (int j = 0; j < MoveUp.Count / 6; j++)
-            {
-                try
-                {
-                    trainerUtils.SetEachJointPositions(MoveUp, j, links);
-                }
-                catch
-                {
-                    continue;
-                }
-                yield return new WaitForSeconds(0.05f);
-            }
-            yield return new WaitForSeconds(0.2f);
-            
-            EvaluateReward();
-            yield return new WaitForSeconds(0.5f);
-            Destroy(target);
-            closeTargetGripper.ButtonClicked = false;
-            Utils.MoveToInitialPosition(transform);
-            yield return new WaitForSeconds(0.5f);
-
-            isActionInProgress = false;
-            if (Objects.transform.childCount == 0)
-            {
-                Debug.Log($"Reward for Episode{Episode}: {EpisodeReward}");
-                EndEpisode();
-            }
-
-            ReadyToObserve = true;
-        }
-        private float EvaluateDistance()
-        {
-            float horizontalDistance = Vector2.Distance(new Vector2(EndEffector.position.x, EndEffector.position.z), new Vector2(target.transform.position.x, target.transform.position.z));
-            float verticalDistance = Mathf.Abs(EndEffector.position.y - target.transform.position.y);
-            float distnaceToTarget = Vector3.Distance(EndEffector.position, target.transform.position);
-            if (horizontalDistance < 0.1f && verticalDistance < 0.1f)
-            {
-                //_reward += 3.0f;
-            }
-
-            return distnaceToTarget;
-        }
         private void EvaluateReward()
         {
+            float _reward_eps = 0f;
+            float _reward_suc = 0f;
+
             if (target != null && target.transform != null)
             {
-                if (target.transform.position.y >= 3f)
+                _reward_eps = GWS.GetEpsilon();
+                var targetContact = target.GetComponent<TargetContact>();
+
+                if (targetContact != null && targetContact.isContact)
                 {
-                    _reward += 1.0f;
-                    EpisodeReward += 1.0f;
+                    _reward_suc = 1f;
                     _success = true;
                 }
                 else
                 {
+                    _reward_suc = 0f;
                     _success = false;
                 }
 
+                _reward = _reward_eps + _reward_suc;
+
                 Destroy(target);
                 cs.DeleteOutlier(Objects);
+                Debug.Log($"Reward: {_reward}, Epsilon: {_reward_eps}, Success: {_reward_suc}");
             }
             else
             {
                 _success = false;
                 Debug.LogWarning("EvaluateReward: target is null or already destroyed.");
             }
+            RewardLogger.LogReward(_reward_eps, _reward_suc);
 
             SetReward(_reward);
         }
