@@ -68,6 +68,7 @@ namespace MyMLAgents
         private List<double> UpArray = new List<double>();
         void Start()
         {
+            Debug.Log("Agent Activated");
             int.TryParse(transform.parent.gameObject.name.Substring(5), out AgentID);
             links = Utils.GetLinks(transform);
             grips = Utils.GetGrips(transform);
@@ -77,6 +78,7 @@ namespace MyMLAgents
             closeTargetGripper = transform.parent.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == "GripperControl")?.GetComponent<CloseTargetGripper>();
             agentCamera = transform.parent.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == "TargetCam")?.GetComponentInChildren<Camera>();
             GWS = GetComponent<WrenchConvexHull>();
+            Debug.Log($"InstanceID: {AgentID}, GWS: {GWS}");
             cs = gameObject.GetComponent<CubeSpawn>();  
 
 
@@ -266,6 +268,7 @@ namespace MyMLAgents
                 {
                     _reward_suc = 1f;
                     _success = true;
+                    EpisodeReward++;
                 }
                 else
                 {
@@ -277,14 +280,14 @@ namespace MyMLAgents
 
                 Destroy(target);
                 cs.DeleteOutlier(Objects);
-                Debug.Log($"Reward: {_reward}, Epsilon: {_reward_eps}, Success: {_reward_suc}");
+                GWS.ClearWrench();
             }
             else
             {
                 _success = false;
                 Debug.LogWarning("EvaluateReward: target is null or already destroyed.");
             }
-            RewardLogger.LogReward(_reward_eps, _reward_suc);
+            // RewardLogger.LogReward(_reward_eps, _reward_suc);
 
             SetReward(_reward);
         }

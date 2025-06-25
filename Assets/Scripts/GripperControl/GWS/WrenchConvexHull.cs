@@ -17,10 +17,13 @@ namespace GripperGWS
 
         private void Start()
         {
-            wrenchCollector = WrenchCollector.Instance;
-
+            wrenchCollector = GetComponent<WrenchCollector>();
         }
 
+        public void ClearWrench()
+        {
+            wrenchCollector.ClearAll();
+        }
 
         /// <summary>
         /// 외부에서 호출하여 GWS(Epsilon) 계산 및 시각화까지 수행하는 메서드
@@ -31,6 +34,7 @@ namespace GripperGWS
             // targetContact를 새롭게 찾음
             if (targetContact == null || !targetContact.isContact) return 0f;
             // TargetContact에서 WrenchCollector에 force/moment를 갱신
+            targetContact.SetCollector(wrenchCollector);
             targetContact.GetWrenches();
 
             // WrenchCollector에서 force/moment 리스트를 받아옴
@@ -65,8 +69,7 @@ namespace GripperGWS
             if (convexHull.ErrorMessage == "")
             {
                 double eps = CalculateEpsilon(convexHull);
-                epsilon = (float)eps * 1000f;
-                Debug.Log($"Epsilon, Radius:{eps}, {epsilon}");
+                epsilon = (float)eps * 20f;
             }
 
             return epsilon;

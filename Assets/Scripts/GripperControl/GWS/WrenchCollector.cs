@@ -7,24 +7,9 @@ namespace GripperGWS
 {
     public class WrenchCollector : MonoBehaviour
     {
-        private static WrenchCollector instance;
-        public static WrenchCollector Instance => instance;
-
         // Dictionary to store Wrenches for each Collider
         private Dictionary<Collider, List<Vector3>> forceData = new Dictionary<Collider, List<Vector3>>();
         private Dictionary<Collider, List<Vector3>> momentData = new Dictionary<Collider, List<Vector3>>();
-        private void Awake()
-        {
-            if (instance != null && instance != this)
-            {
-                Destroy(this.gameObject);
-            }
-            else
-            {
-                instance = this;
-            }
-        }
-
         /// <summary>
         /// Updates the wrenches for a specific collider.
         /// </summary>
@@ -75,12 +60,11 @@ namespace GripperGWS
 
             return allMoments;
         }
-        /// <summary>
-        /// Clears all stored wrench data.
-        /// </summary>
-        public void ClearForces()
+
+        public void ClearAll()
         {
             forceData.Clear();
+            momentData.Clear();
         }
     }
 }

@@ -12,6 +12,12 @@ namespace GripperGWS
         private Rigidbody rb;
         private float lambda = 1.0f; // 특성 길이(초기값 1.0, Start에서 자동 계산)
         private Collision lastCollision = null;
+        private WrenchCollector wc;
+
+        public void SetCollector(WrenchCollector collector)
+        {
+            wc = collector;
+        }
         private void Awake()
         {
             rb = GetComponent<Rigidbody>();
@@ -83,8 +89,8 @@ namespace GripperGWS
                     moments.Add(moment);
                 }
             }
-            WrenchCollector.Instance.UpdateForces(lastCollision.collider, forces);
-            WrenchCollector.Instance.UpdateMoments(lastCollision.collider, moments);
+            wc.UpdateForces(lastCollision.collider, forces);
+            wc.UpdateMoments(lastCollision.collider, moments);
         }
     }
 }
