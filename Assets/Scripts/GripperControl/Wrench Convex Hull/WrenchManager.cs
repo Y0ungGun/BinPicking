@@ -5,11 +5,12 @@ using GripperGWS;
 
 namespace GripperGWS
 {
-    public class WrenchCollector : MonoBehaviour
+    public class WrenchManager : MonoBehaviour
     {
         // Dictionary to store Wrenches for each Collider
         private Dictionary<Collider, List<Vector3>> forceData = new Dictionary<Collider, List<Vector3>>();
         private Dictionary<Collider, List<Vector3>> momentData = new Dictionary<Collider, List<Vector3>>();
+
         /// <summary>
         /// Updates the wrenches for a specific collider.
         /// </summary>
@@ -60,7 +61,6 @@ namespace GripperGWS
 
             return allMoments;
         }
-
         public void ClearAll()
         {
             forceData.Clear();

@@ -12,45 +12,34 @@ namespace GripperGWS
 {
     public class WrenchConvexHull : MonoBehaviour
     {
-        private WrenchCollector wrenchCollector;
-        private TargetContact targetContact;
+        public WrenchManager wrenchManager;
+        public TargetContact targetContact;
+        private bool needConvexHull = false;
 
         private void Start()
         {
-            wrenchCollector = GetComponent<WrenchCollector>();
+            wrenchManager = GetComponent<WrenchManager>();
         }
+        //private void Update()
+        //{
+        //    if (targetContact != null)
+        //    {
+        //        GenerateWrenchConvexHull();
+        //    }
 
-        public void ClearWrench()
-        {
-            wrenchCollector.ClearAll();
-        }
-
-        /// <summary>
-        /// 외부에서 호출하여 GWS(Epsilon) 계산 및 시각화까지 수행하는 메서드
-        /// </summary>
-        /// <returns>계산된 epsilon 값</returns>
+        //}
         public float GetEpsilon()
         {
-            // targetContact를 새롭게 찾음
-            if (targetContact == null || !targetContact.isContact) return 0f;
-            // TargetContact에서 WrenchCollector에 force/moment를 갱신
-            targetContact.SetCollector(wrenchCollector);
-            targetContact.GetWrenches();
-
-            // WrenchCollector에서 force/moment 리스트를 받아옴
-            List<Vector3> forces = wrenchCollector.GetAllForces();
-            List<Vector3> moments = wrenchCollector.GetAllMoments();
-            if (forces == null || moments == null || forces.Count == 0 || moments.Count == 0) return 0f;
-            int count = Mathf.Min(forces.Count, moments.Count);
-            if (count == 0) return 0f;
-
-            // Wrench 리스트 생성
-            List<Wrench> wrenches = new List<Wrench>();
-            for (int i = 0; i < count; i++)
+            List<Vector3> Forces = wrenchManager.GetAllForces();
+            List<Vector3> Moments = wrenchManager.GetAllMoments();
+            // 캐시된 wrench 리스트를 TargetContact에서 받아옴
+            List<Wrench> Wrenches = new List<Wrench>();
+            for (int i = 0; i < Forces.Count; i++)
             {
-                wrenches.Add(new Wrench(forces[i], moments[i]));
+                Wrenches.Add(new Wrench(Forces[i], Moments[i]));
             }
-            wrenches = wrenches
+            // --- 입력 좌표 반올림 및 정렬 ---
+            Wrenches = Wrenches
                 .Select(w => new Wrench(
                     new Vector3(
                         (float)Math.Round(w.Position[0], 6),
@@ -62,23 +51,53 @@ namespace GripperGWS
                         (float)Math.Round(w.Position[5], 6))))
                 .OrderBy(w => string.Join("_", w.Position.Select(x => x.ToString("G6"))))
                 .ToList();
-            var mat = Matrix<double>.Build.Dense(wrenches.Count, 6, (i, j) => wrenches[i].Position[j]);
-            var svd = mat.Svd(true);
-            Debug.Log("Wrench input rank: " + svd.Rank);
-            // Epsilon 계산
-            var convexHull = ConvexHull.Create(wrenches);
+
+            // Convex Hull 계산 및 epsilon 구하기
+            var convexHull = ConvexHull.Create(Wrenches);
             float epsilon = 0f;
             if (convexHull.ErrorMessage == "")
             {
                 double eps = CalculateEpsilon(convexHull);
                 epsilon = (float)eps * 20f;
-            }
-            else
-            {
-                Debug.LogError("Convex Hull Error: " + convexHull.ErrorMessage);
+                //Debug.Log($"Epsilon, Radius:{eps}, {epsilon}");
             }
 
             return epsilon;
+        }
+        public void GenerateWrenchConvexHull()
+        {
+            List<Vector3> Forces = wrenchManager.GetAllForces();
+            List<Vector3> Moments = wrenchManager.GetAllMoments();
+            // 캐시된 wrench 리스트를 TargetContact에서 받아옴
+            List<Wrench> Wrenches = new List<Wrench>();
+            for (int i = 0; i < Forces.Count; i++)
+            {
+                Wrenches.Add(new Wrench(Forces[i], Moments[i]));
+            }
+            // --- 입력 좌표 반올림 및 정렬 ---
+            Wrenches = Wrenches
+                .Select(w => new Wrench(
+                    new Vector3(
+                        (float)Math.Round(w.Position[0], 6),
+                        (float)Math.Round(w.Position[1], 6),
+                        (float)Math.Round(w.Position[2], 6)),
+                    new Vector3(
+                        (float)Math.Round(w.Position[3], 6),
+                        (float)Math.Round(w.Position[4], 6),
+                        (float)Math.Round(w.Position[5], 6))))
+                .OrderBy(w => string.Join("_", w.Position.Select(x => x.ToString("G6"))))
+                .ToList();
+
+            // Convex Hull 계산 및 epsilon 구하기
+            var convexHull = ConvexHull.Create(Wrenches);
+            float epsilon = 0f;
+            if (convexHull.ErrorMessage == "")
+            {
+                double eps = CalculateEpsilon(convexHull);
+                epsilon = (float)eps * 5f;
+                Debug.Log($"Epsilon, Radius:{eps}, {epsilon}");
+                needConvexHull = false; 
+            }
         }
 
         private static double CalculateEpsilon(ConvexHullCreationResult<Wrench, DefaultConvexFace<Wrench>> hullResult)
@@ -131,10 +150,13 @@ namespace GripperGWS
         {
             return v1.Zip(v2, (x, y) => x * y).Sum();
         }
-
         public void SetTargetContact(GameObject target)
         {
             targetContact = target.GetComponent<TargetContact>();
+        }
+        public void ClearWrench()
+        {
+            wrenchManager.ClearAll();
         }
     }
 }

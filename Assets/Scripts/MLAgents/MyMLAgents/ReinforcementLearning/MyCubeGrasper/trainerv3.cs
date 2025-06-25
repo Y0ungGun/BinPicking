@@ -88,19 +88,31 @@ namespace MyMLAgents
             Episode = Episode + 1f;
             SetInitial();
             cs.SpawnCubes();
-            // StartCoroutine(StartwithDelay());
-            StartwithDelay();
+            StartCoroutine(StartwithDelayCoroutine());
+            //StartwithDelay();
+        }
+        private IEnumerator StartwithDelayCoroutine()
+        {
+            Utils.MoveToInitialPosition(transform);
+            Objects = transform.parent.Find("Objects")?.gameObject;
+            EpisodeLength = Objects.transform.childCount;
+
+            yield return new WaitForSeconds(0.1f);
+
+            Utils.FreezeObjects(Objects);
+            Utils.UnFreezeObjects(Objects);
+
+            cs.DeleteOutlier(Objects);
+            ReadyToObserve = true; isActionInProgress = false;
         }
         private void StartwithDelay()
         {
             Utils.MoveToInitialPosition(transform);
-            //yield return new WaitForSeconds(4.0f);
             Objects = transform.parent.Find("Objects")?.gameObject;
             EpisodeLength = Objects.transform.childCount;
             Utils.FreezeObjects(Objects);
             Utils.UnFreezeObjects(Objects);
             cs.DeleteOutlier(Objects);
-            //yield return new WaitForSeconds(1.0f);
             ReadyToObserve = true; isActionInProgress = false;
         }
         public override void CollectObservations(VectorSensor sensor)
@@ -238,6 +250,7 @@ namespace MyMLAgents
             target.name = "target";
             target.AddComponent<TargetContact>();
             GWS.SetTargetContact(target);
+            GWS.targetContact.SetCollector(GWS.wrenchManager);
 
             x = TargetPosition.x + x_offset + _w * actions.ContinuousActions[0];
             y = TargetPosition.z + z_offset + _w * actions.ContinuousActions[1];
@@ -262,6 +275,7 @@ namespace MyMLAgents
             if (target != null && target.transform != null)
             {
                 _reward_eps = GWS.GetEpsilon();
+                //_reward_eps = GWS.GetEpsilon();
                 var targetContact = target.GetComponent<TargetContact>();
 
                 if (targetContact != null && targetContact.isContact)
