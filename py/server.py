@@ -19,8 +19,8 @@ import time
 import csv
 
 save_lock = threading.Lock()
-os.chdir("C:/Users/smsla/MultiAgent/py")
-#os.chdir("C:/Users/dudrj/unityworkspace/BinPicking/py")
+#os.chdir("C:/Users/smsla/MultiAgent/py")
+os.chdir("C:/Users/dudrj/unityworkspace/BinPicking/py")
 print(os.getcwd())
 # 모델 로드 (한 번만 실행)
 onnx_model_path = "best.onnx"

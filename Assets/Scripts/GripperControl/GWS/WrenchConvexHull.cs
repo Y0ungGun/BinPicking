@@ -62,7 +62,9 @@ namespace GripperGWS
                         (float)Math.Round(w.Position[5], 6))))
                 .OrderBy(w => string.Join("_", w.Position.Select(x => x.ToString("G6"))))
                 .ToList();
-
+            var mat = Matrix<double>.Build.Dense(wrenches.Count, 6, (i, j) => wrenches[i].Position[j]);
+            var svd = mat.Svd(true);
+            Debug.Log("Wrench input rank: " + svd.Rank);
             // Epsilon 계산
             var convexHull = ConvexHull.Create(wrenches);
             float epsilon = 0f;
@@ -70,6 +72,10 @@ namespace GripperGWS
             {
                 double eps = CalculateEpsilon(convexHull);
                 epsilon = (float)eps * 20f;
+            }
+            else
+            {
+                Debug.LogError("Convex Hull Error: " + convexHull.ErrorMessage);
             }
 
             return epsilon;
@@ -130,5 +136,15 @@ namespace GripperGWS
         {
             targetContact = target.GetComponent<TargetContact>();
         }
+    }
+}
+
+public class Wrench : IVertex
+{
+    public double[] Position { get; private set; }
+
+    public Wrench(Vector3 force, Vector3 moment)
+    {
+        Position = new double[] { force.x, force.y, force.z, moment.x, moment.y, moment.z };
     }
 }

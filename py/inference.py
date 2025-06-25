@@ -17,9 +17,10 @@ import os
 import glob
 import time
 import matplotlib
+import argparse
 
 #os.chdir("C:/Users/smsla/MultiAgent/py")
-os.chdir("C:/Users/dudrj/unityworkspace/RL-Bin-Picking/py")
+os.chdir("C:/Users/dudrj/unityworkspace/BinPicking/py")
 print(os.getcwd())
 # 모델 로드 (한 번만 실행)
 onnx_model_path = "best.onnx"
@@ -56,12 +57,10 @@ class GraspabilityModel(nn.Module):
 
 # 이미지 전처리 함수
 def preprocess_image(image):
-    transform = T.Compose([
-        T.Resize(736),
-        T.ToTensor()
-    ])
-    img_tensor = transform(image).unsqueeze(0)
-    return img_tensor.numpy()
+    img = cv2.resize(image, (736, 736))
+    img = img.astype(np.float32) / 255.0
+    img = np.transpose(img, (2, 0, 1))
+    return img[np.newaxis, :]
 
 def clean_online_data():
     save_dir = "online_data"
@@ -91,6 +90,43 @@ def get_next_data_no():
             except ValueError:
                 continue
     return max_no + 1
+
+def run_graspability_model(instance_id, img_array):
+    global data_no
+
+    detections = run_inference(img_array)
+    
+    cropped_objects = extract_objects(img_array, detections)
+    for i, obj in enumerate(cropped_objects):
+        if not isinstance(obj, np.ndarray):
+            print(f"cropped_objects[{i}] is not ndarray: {type(obj)}")
+        
+    if cropped_objects:
+        objects_tensor = torch.from_numpy(np.array(cropped_objects)).permute(0, 3, 1, 2).float() / 255.0
+        objects_tensor = objects_tensor.to(device)
+        with torch.no_grad():
+            grasp_probs, feature_vectors = grasp_model(objects_tensor)
+        
+    else:
+        print(f"No objects detected in image {instance_id}.")
+
+    grasp_probs_np = grasp_probs.cpu().numpy()
+    best_idx = int(np.argmax(grasp_probs_np))
+    best_feature = feature_vectors[best_idx].cpu().numpy()
+    best_prob = grasp_probs_np[best_idx]
+    best_img = cropped_objects[best_idx]
+
+    # best info 출력
+    x1, y1, x2, y2, conf, class_id = detections[0][best_idx]
+    x = float((x1 + x2) / 2)
+    y = float((y1 + y2) / 2)
+    print(f"Best Object: Class: {class_id}, Confidence: {conf}, Graspability: {best_prob}")
+    # response 생성
+    response = struct.pack('I', len(best_feature))
+    response += struct.pack(f'{len(best_feature)}f', *best_feature)
+    response += struct.pack('2f', x, y)
+
+    return response
 
 # YOLO 추론 및 NMS 적용
 def run_inference(img):
@@ -139,112 +175,14 @@ def extract_objects(image, detections):
 
     return objects
 
-def run_graspability_model(instance_id):
-    global data_no
-    img_path = os.path.join(IMAGE_PATH, f"image_{instance_id}.png")
-    img = Image.open(img_path)
-    img_array = np.array(img)
-    detections = run_inference(img)
-
-    cropped_objects = extract_objects(img_array, detections)
-    if cropped_objects:
-        objects_tensor = torch.from_numpy(np.array(cropped_objects)).permute(0, 3, 1, 2).float() / 255.0
-        objects_tensor = objects_tensor.to(device)
-        with torch.no_grad():
-            grasp_probs, feature_vectors = grasp_model(objects_tensor)
-    
-    grasp_probs_np = grasp_probs.cpu().numpy()
-    best_idx = int(np.argmax(grasp_probs_np))
-    best_feature = feature_vectors[best_idx].cpu().numpy()
-    best_prob = grasp_probs_np[best_idx]
-    best_img = cropped_objects[best_idx]
-
-    # best info 출력
-    x1, y1, x2, y2, conf, class_id = detections[0][best_idx]
-    x = float((x1 + x2) / 2)
-    y = float((y1 + y2) / 2)
-    print(f"Best Object: Class: {class_id}, Confidence: {conf}, Graspability: {best_prob}")
-    # response 생성
-    response = struct.pack('I', len(best_feature))
-    response += struct.pack(f'{len(best_feature)}f', *best_feature)
-    response += struct.pack('2f', x, y)
-
-    # === online_data 저장 및 online_learning 제거 ===
-    # save_dir="online_data"
-    # os.makedirs(save_dir, exist_ok=True)
-    # save_path = os.path.join(save_dir, f"{data_no}_{instance_id}_{best_prob:.4f}.png")
-    # data_no += 1
-    # cv2.imwrite(save_path, cv2.cvtColor(best_img, cv2.COLOR_RGB2BGR))
-
-    save_dir = "figures"
-    os.makedirs(save_dir, exist_ok=True)
-    vis_save_path = os.path.join(save_dir, f"{data_no}_{instance_id}_grasp_vis.png")
-    cmap_save_path = os.path.join(save_dir, f"cmap.png")
-    visualize_graspability_with_boxes(img_path, detections, grasp_probs_np, save_path=vis_save_path, cmap_save_path=cmap_save_path)
-    data_no += 1
-
-    return response
-
-
-def visualize_graspability_with_boxes(orig_img_path, detections, grasp_probs, save_path="grasp_vis.png", cmap_save_path=None):
-    """
-    orig_img_path: YOLO inference에 사용된 원본 이미지 경로(str)
-    detections: YOLO NMS 결과 (list of [x1, y1, x2, y2, conf, class_id])
-    grasp_probs: 각 detection에 대한 graspability 확률 (list or np.ndarray, 0~1)
-    save_path: graspability 시각화 이미지 저장 경로
-    cmap_save_path: 컬러맵 이미지 저장 경로 (None이면 저장하지 않음)
-    """
-    import matplotlib.pyplot as plt
-    from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-    from matplotlib.figure import Figure
-
-    orig_img = np.array(Image.open(orig_img_path).convert("RGB"))
-    img = orig_img.copy()
-
-    # 연속적인 컬러맵 (빨강~파랑)
-    cmap = matplotlib.cm.get_cmap('jet')  # 0=red, 1=blue
-
-    for det, prob in zip(detections[0], grasp_probs):
-        x1, y1, x2, y2, conf, class_id = det
-        x1, y1, x2, y2 = map(int, [x1, y1, x2, y2])
-        x = (x1 + x2) // 2
-        y = (y1 + y2) // 2
-        width = 120
-        height = 120
-        x_new1 = max(0, x - (width // 2))
-        y_new1 = max(0, y - (height // 2))
-        x_new2 = min(img.shape[1], x + (width // 2))
-        y_new2 = min(img.shape[0], y + (height // 2))
-        color_float = cmap(float(prob))  # RGBA, 0~1
-        color = tuple(int(255 * c) for c in color_float[:3])
-        cv2.rectangle(img, (x_new1, y_new1), (x_new2, y_new2), color, 2)
-        label = f"G:{prob:.3f}"
-        cv2.putText(
-            img, label, (x_new1, y_new1 - 10),
-            cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2
-        )
-
-    # grasp_vis 이미지를 저장
-    cv2.imwrite(save_path, cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
-    print(f"Graspability 시각화 결과 저장: {save_path}")
-
-    # 컬러맵 이미지를 별도 파일로 저장
-    if cmap_save_path is not None:
-        fig = Figure(figsize=(6, 1))
-        canvas = FigureCanvas(fig)
-        ax = fig.add_axes([0.05, 0.5, 0.9, 0.3])
-        norm = matplotlib.colors.Normalize(vmin=0, vmax=1)
-        cb1 = matplotlib.colorbar.ColorbarBase(ax, cmap=cmap, norm=norm, orientation='horizontal')
-        cb1.set_label('Graspability (0=red, 1=blue)')
-        canvas.draw()
-        fig.savefig(cmap_save_path)
-        plt.close(fig)
-        print(f"컬러맵 저장: {cmap_save_path}")
-
-# 성공률 기록용 변수 추가
-success_history = []
-success_count = 0
-total_count = 0
+def recv_all(sock, n):
+    data = b''
+    while len(data) < n:
+        packet = sock.recv(n - len(data))
+        if not packet:
+            raise ConnectionError("Socket connection lost")
+        data += packet
+    return data
 
 def handle_client(client_socket):
     global failure_count, request_count, processed_requests
@@ -254,78 +192,62 @@ def handle_client(client_socket):
 
     with concurrent_clients:  # Limit concurrent clients
         try:
-            message = client_socket.recv(1024).decode("utf-8").strip()
-            if "," in message:
-                parts = message.split(",")
-                if len(parts) == 2 and parts[0].isdigit() and parts[1].isdigit():
-                    instance_id = int(parts[0])
-                    success = int(parts[1])
-                    print(f"Received instance_id: {instance_id}, success: {success}")
-                    # === 성공률 누적 ===
-                    total_count += 1
-                    if success == 1:
-                        success_count += 1
-                    success_history.append(success_count / total_count if total_count > 0 else 0)
-                    # 100회마다 그래프 저장
-                    if total_count % 100 == 0:
-                        import matplotlib.pyplot as plt
-                        save_dir = "figures"
-                        os.makedirs(save_dir, exist_ok=True)
-                        plt.figure(figsize=(8, 4))
-                        plt.plot(success_history, label="Success Rate")
-                        plt.xlabel("Attempt")
-                        plt.ylabel("Success Rate")
-                        plt.title("Cumulative Success Rate")
-                        plt.ylim(0, 1)
-                        plt.grid(True)
-                        plt.legend()
-                        plt.tight_layout()
-                        plt.savefig(os.path.join(save_dir, "success_rate.png"))
-                        plt.close()
-                        print(f"[Metric] Success rate graph saved: {os.path.join(save_dir, 'success_rate.png')}")
-                else:
-                    print(f"Invalid message: {message}")
-                    client_socket.close()
-                    failure_count += 1
-                    return
-            elif message.isdigit():
-                instance_id = int(message)
-                success = None
-                print(f"Received instance_id: {instance_id}")
-            else:
-                print(f"Invalid message: {message}")
-                client_socket.close()
-                failure_count += 1
-                return
-            if success is not None:
-                pred_dir = "online_data"
-                # 파일명 형식: {data_no}_{instance_id}_{best_prob}.png 또는 {data_no}_{instance_id}_{best_prob}_{success}.png
-                # 새롭게 바뀐 data_no를 포함한 형식에 맞춰 pattern 인식
-                pattern = os.path.join(pred_dir, f"*_{instance_id}_*.png")
-                candidates = sorted(glob.glob(pattern), key=os.path.getmtime, reverse=True)
-                for fname in candidates:
-                    base = os.path.basename(fname)
-                    parts = base.replace(".png", "").split("_")
-                    # 파일명 형식: {data_no}_{instance_id}_{best_prob}.png (success 없는 파일만 처리)
-                    if len(parts) == 3:
-                        data_no_str, inst_id_str, best_prob_str = parts
-                        new_name = os.path.join(pred_dir, f"{data_no_str}_{inst_id_str}_{best_prob_str}_{success}.png")
-                        os.rename(fname, new_name)
-                        break
+            # 1. AgentID (4 bytes, int)
+            agent_id_bytes = recv_all(client_socket, 4)
+            agent_id = int.from_bytes(agent_id_bytes, byteorder='little', signed=True)
+            # 2. success (4 bytes, int)
+            success_bytes = recv_all(client_socket, 4)
+            success = int.from_bytes(success_bytes, byteorder='little', signed=True)
+            # 3. 이미지 길이 (4 bytes, int)
+            img_len_bytes = recv_all(client_socket, 4)
+            img_len = int.from_bytes(img_len_bytes, byteorder='little', signed=True)
+            # 4. 이미지 데이터 (img_len bytes)
+            img_bytes = recv_all(client_socket, img_len)
+            img_array = np.frombuffer(img_bytes, np.uint8)
+            img_array = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+            img_array = cv2.cvtColor(img_array, cv2.COLOR_BGR2RGB)
 
-            response = run_graspability_model(instance_id)
+            # === 성공률 누적 ===
+            total_count += 1
+            if success in (0, 1):
+                if success == 1:
+                    success_count += 1
+            success_history.append(success_count / total_count if total_count > 0 else 0)
+            # 100회마다 그래프 저장
+            if total_count % 100 == 0:
+                import matplotlib.pyplot as plt
+                save_dir = "figures"
+                os.makedirs(save_dir, exist_ok=True)
+                plt.figure(figsize=(8, 4))
+                final_rate = success_history[-1] if success_history else 0
+                plt.plot(success_history, label=f"Success Rate (final: {final_rate:.3f})")
+                plt.xlabel("Attempt")
+                plt.ylabel("Success Rate")
+                plt.title("Cumulative Success Rate")
+                plt.ylim(0, 1)
+                plt.grid(True)
+                plt.legend()
+                plt.tight_layout()
+                plt.savefig(os.path.join(save_dir, "success_rate.png"))
+                plt.close()
+                print(f"[Metric] Success rate graph saved: {os.path.join(save_dir, 'success_rate.png')}")
+
+            # === 추론 및 응답 ===
+            response = run_graspability_model(agent_id, img_array)
             client_socket.sendall(response)
             processed_requests += 1
-
-            pred_dir = "online_data"
-            feedback_files = glob.glob(os.path.join(pred_dir, "*_[01].png"))
-            # === 32, 64, 96, ... 개가 될 때마다 학습 ===
-            # if len(feedback_files) >= 128:
-            #     online_learning_from_dir(batch_size=128)
 
         except Exception as e:
             print(f"Client disconnected: {e}")
             failure_count += 1
+            try:
+                dummy_feature = [0.0] * 256
+                dummy_response = struct.pack('I', 256)
+                dummy_response += struct.pack('256f', *dummy_feature)
+                dummy_response += struct.pack('2f', 736//2, 736//2)
+                client_socket.sendall(dummy_response)
+            except Exception as e2:
+                print(f"Failed to send dummy response: {e2}")
         finally:
             client_socket.close()
             response_time = time.time() - start_time
@@ -357,7 +279,20 @@ model_dict.update(pretrained_dict)
 grasp_model.load_state_dict(model_dict)
 print("Loaded encoder_rn256 weights (feature extractor + fc).")
 
-output_ckpt = "grasp_out.pth"
+# ===== 인자 파싱 =====
+parser = argparse.ArgumentParser()
+parser.add_argument('--exp_name', type=str, default=None, help='Experiment directory name containing grasp_out.pth (e.g., 240625)')
+args = parser.parse_args()
+
+output_ckpt = None
+if args.exp_name is not None:
+    output_ckpt = os.path.join('results', f'MyGrasp_{args.exp_name}', 'grasp_out.pth')
+    if not os.path.exists(output_ckpt):
+        print(f"[경고] 지정한 경로에 grasp_out.pth가 없습니다: {output_ckpt}")
+        output_ckpt = 'grasp_out.pth'
+else:
+    output_ckpt = 'grasp_out.pth'
+
 if os.path.exists(output_ckpt):
     grasp_model.output.load_state_dict(torch.load(output_ckpt, map_location="cpu"))
     print(f"Loaded output head weights from {output_ckpt}")
@@ -389,6 +324,11 @@ processed_requests = 0
 request_count = 0
 failure_count = 0
 response_times = []
+
+# 성공률 기록용 변수 추가
+success_history = []
+success_count = 0
+total_count = 0
 
 for _ in range(1):
     Thread(target=worker, daemon=True).start()

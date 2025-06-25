@@ -68,7 +68,6 @@ namespace MyMLAgents
         private List<double> UpArray = new List<double>();
         void Start()
         {
-            Debug.Log("Agent Activated");
             int.TryParse(transform.parent.gameObject.name.Substring(5), out AgentID);
             links = Utils.GetLinks(transform);
             grips = Utils.GetGrips(transform);
@@ -78,7 +77,6 @@ namespace MyMLAgents
             closeTargetGripper = transform.parent.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == "GripperControl")?.GetComponent<CloseTargetGripper>();
             agentCamera = transform.parent.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == "TargetCam")?.GetComponentInChildren<Camera>();
             GWS = GetComponent<WrenchConvexHull>();
-            Debug.Log($"InstanceID: {AgentID}, GWS: {GWS}");
             cs = gameObject.GetComponent<CubeSpawn>();  
 
 
@@ -92,7 +90,6 @@ namespace MyMLAgents
             cs.SpawnCubes();
             // StartCoroutine(StartwithDelay());
             StartwithDelay();
-            cs.DeleteOutlier(Objects);
         }
         private void StartwithDelay()
         {
@@ -102,6 +99,7 @@ namespace MyMLAgents
             EpisodeLength = Objects.transform.childCount;
             Utils.FreezeObjects(Objects);
             Utils.UnFreezeObjects(Objects);
+            cs.DeleteOutlier(Objects);
             //yield return new WaitForSeconds(1.0f);
             ReadyToObserve = true; isActionInProgress = false;
         }
@@ -109,6 +107,8 @@ namespace MyMLAgents
         {
             if (ReadyToObserve)
             {
+
+                cs.DeleteOutlier(Objects);
                 _reward = 0f;
 
                 isActionInProgress = true;
@@ -276,8 +276,6 @@ namespace MyMLAgents
                     _success = false;
                 }
 
-                _reward = _reward_eps + _reward_suc;
-
                 Destroy(target);
                 cs.DeleteOutlier(Objects);
                 GWS.ClearWrench();
@@ -287,8 +285,10 @@ namespace MyMLAgents
                 _success = false;
                 Debug.LogWarning("EvaluateReward: target is null or already destroyed.");
             }
-            // RewardLogger.LogReward(_reward_eps, _reward_suc);
+            RewardLogger.LogReward(_reward_eps, _reward_suc);
+            
 
+            _reward = _reward_eps + _reward_suc;
             SetReward(_reward);
         }
         private void SetInitial()
