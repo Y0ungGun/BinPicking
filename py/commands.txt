@@ -1,28 +1,14 @@
 1. 학습 실행
-mlagents-learn config/custom_ppo.yaml --run-id=MyGrasp_250519_001 --time-scale=50
+mlagents-learn config/custom_ppo.yaml --run-id=MyGrasp_250519_001 --time-scale=50 --resume
 
-2. 학습 이어하기
-mlagents-learn config/custom_ppo.yaml --run-id=MyGrasp_250430 --resume --time-scale=50
-
-3. tensorboard 활성화
+2. tensorboard 활성화
 tensorboard --logdir=results/MyGrasp_250430
 
-4. 병렬 학습
-mlagents-learn config/custom_ppo.yaml --run-id=MyGrasp_250502_001 --env ../Env/DSRML.exe --time-scale=100 --num-envs=8
-
-5. git connect
-git remote -v
-git remote add origin https://github.com/Y0ungGun/RL-Bin-Picking
-
-6. git upload
-git add .
-git commit -m "설명"
-git push
-
-6. git download
-git clone "address"
-
-7. visualize CNN training
+3. visualize CNN training
 python visualize.py en_batch256,epoch1000,data6000/metrics_en.npz mbn_batch256,epoch1000,data6000/metrics_en.npz
 
-8. Graspability Model 관리 - grasp_out.pth 파일은 online learning 진행한 Grasp Agent와 함께 보관하고, best_loss.csv도 함께 보관해야 함.
+4. Reward plot
+python plot.py total --exp_name 250625
+python plot.py each --exp_name 250625 --window 10000
+
+9. Graspability Model 관리 - grasp_out.pth 파일은 online learning 진행한 Grasp Agent와 함께 보관하고, best_loss.csv도 함께 보관해야 함.

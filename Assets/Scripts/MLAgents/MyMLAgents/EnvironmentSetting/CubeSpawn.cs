@@ -10,6 +10,8 @@ namespace MyMLAgents
         public Destroyer Dest;
         public GameObject Objects;
         public GameObject[] objectTypes;
+        private Vector3 spawnRangeMax;
+        private Vector3 spawnRangeMin;
         private Vector3 positionRangeMax;
         private Vector3 positionRangeMin;
 
@@ -17,6 +19,8 @@ namespace MyMLAgents
         {
             Dest = GameObject.Find("Destroyer").GetComponent<Destroyer>();  
             Objects = transform.parent.Find("Objects")?.gameObject;
+            spawnRangeMax = transform.parent.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == "Spawn_max")?.position ?? Vector3.zero;
+            spawnRangeMin = transform.parent.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == "Spawn_min")?.position ?? Vector3.zero;
             positionRangeMax = transform.parent.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == "Corner_max")?.position ?? Vector3.zero;
             positionRangeMin = transform.parent.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == "Corner_min")?.position ?? Vector3.zero;
             objectTypes = new GameObject[]
@@ -31,7 +35,7 @@ namespace MyMLAgents
         {
             Dest.ClearObjects(Objects);
             //SpawnObject(true);
-            int n = Random.Range(10, 40); // 10, 40
+            int n = Random.Range(60, 80); // 10, 40
             for (int i = 0; i < n; i++)
             {
                 SpawnObject(false);
@@ -48,14 +52,14 @@ namespace MyMLAgents
             float randomScaleY = Random.Range(0.2f, 0.5f);
             float randomScaleZ = Random.Range(0.2f, 0.5f);
             newObj.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
-            newObj.transform.position = Utils.GetRandomPosition(positionRangeMin, positionRangeMax);
+            newObj.transform.position = Utils.GetRandomPosition(spawnRangeMin, spawnRangeMax);
             newObj.transform.rotation = Utils.GetRandomOrientation();
 
             MeshRenderer renderer = newObj.GetComponent<MeshRenderer>();
             Color[] colors = { new Color(0.84f, 0.258f, 0.336f), new Color(0.93f, 0.785f, 0.273f), new Color(0.086f, 0.45f, 0.35f), new Color(0.074f, 0.551f, 0.852f), new Color(0.574f, 0.336f, 0.742f) }; // Purple
 
             Color randomColor = colors[Random.Range(0, colors.Length)];
-
+            
             renderer.material.color = randomColor;
 
             Rigidbody rb = newObj.AddComponent<Rigidbody>();
