@@ -19,12 +19,12 @@ import time
 import csv
 
 save_lock = threading.Lock()
-#os.chdir("C:/Users/smsla/MultiAgent/py")
-os.chdir("C:/Users/dudrj/unityworkspace/BinPicking/py")
+os.chdir("C:/Users/smsla/MultiAgent/py") # here
+#os.chdir("C:/Users/dudrj/unityworkspace/BinPicking/py")
 print(os.getcwd())
 # 모델 로드 (한 번만 실행)
-onnx_model_path = "best.onnx"
-session = ort.InferenceSession(onnx_model_path, providers=['CUDAExecutionProvider'])
+onnx_model_path = "best.onnx" # here
+session = ort.InferenceSession(onnx_model_path, providers=['CUDAExecutionProvider'])  # here
 print(session.get_providers())
 
 class GraspabilityModel(nn.Module):

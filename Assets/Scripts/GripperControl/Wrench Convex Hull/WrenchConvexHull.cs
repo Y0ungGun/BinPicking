@@ -14,7 +14,6 @@ namespace GripperGWS
     {
         public WrenchManager wrenchManager;
         public TargetContact targetContact;
-        private bool needConvexHull = false;
 
         private void Start()
         {
@@ -96,7 +95,6 @@ namespace GripperGWS
                 double eps = CalculateEpsilon(convexHull);
                 epsilon = (float)eps * 5f;
                 Debug.Log($"Epsilon, Radius:{eps}, {epsilon}");
-                needConvexHull = false; 
             }
         }
 

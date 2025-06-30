@@ -13,7 +13,7 @@ namespace GripperGWS
         public bool isContact = false;
         private Rigidbody rb;
         private float lambda = 1.0f; // 특성 길이(초기값 1.0, Start에서 자동 계산)
-        private Collision lastCollision = null;
+
         public WrenchManager wc;   
         private void Start()
         {

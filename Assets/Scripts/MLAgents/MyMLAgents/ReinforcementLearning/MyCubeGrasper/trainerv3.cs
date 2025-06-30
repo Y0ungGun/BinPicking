@@ -219,8 +219,8 @@ namespace MyMLAgents
                         closeTargetGripper.ButtonClicked = false;
                         Utils.MoveToInitialPosition(transform);
                         isActionInProgress = false;
-
-                        if (Objects.transform.childCount == 1)
+                        
+                        if (Objects.transform.childCount <= 1)
                         {
                             Debug.Log($"Reward for Episode{Episode}: {EpisodeReward}");
                             EndEpisode();
@@ -247,6 +247,7 @@ namespace MyMLAgents
             target = Utils.FindTarget(Objects, TargetPosition.x, TargetPosition.z);
             //Debug.Log($"WorldPosition: x:{TargetPosition.x}, y: {TargetPosition.y}, z: {TargetPosition.z}");
             //Debug.Log($"Received Action: {actions.ContinuousActions[0]}, {actions.ContinuousActions[1]}, {actions.ContinuousActions[2]}, {actions.ContinuousActions[3]}, {actions.ContinuousActions[4]}, {actions.ContinuousActions[5]}");
+            if (target == null) EndEpisode();
             target.name = "target";
             target.AddComponent<TargetContact>();
             GWS.SetTargetContact(target);
@@ -266,39 +267,25 @@ namespace MyMLAgents
 
             TargetArray = trainerUtils.GetMArray(x, y, z, rx, ry, rz, 2.0f, links);
         }
-
         private void EvaluateReward()
         {
             float _reward_eps = 0f;
             float _reward_suc = 0f;
 
+            _reward_eps = GWS.GetEpsilon();
+            if (_reward_eps > 0)
+            {
+                _reward_suc = 1f;
+                _success = true;
+                EpisodeReward++;
+            } else { _success = false; }
             if (target != null && target.transform != null)
             {
-                _reward_eps = GWS.GetEpsilon();
-                //_reward_eps = GWS.GetEpsilon();
-                var targetContact = target.GetComponent<TargetContact>();
-
-                if (targetContact != null && targetContact.isContact)
-                {
-                    _reward_suc = 1f;
-                    _success = true;
-                    EpisodeReward++;
-                }
-                else
-                {
-                    _reward_suc = 0f;
-                    _success = false;
-                }
-
                 Destroy(target);
-                cs.DeleteOutlier(Objects);
-                GWS.ClearWrench();
             }
-            else
-            {
-                _success = false;
-                Debug.LogWarning("EvaluateReward: target is null or already destroyed.");
-            }
+            cs.DeleteOutlier(Objects);
+            GWS.ClearWrench();
+            
             RewardLogger.LogReward(_reward_eps, _reward_suc);
             
 
