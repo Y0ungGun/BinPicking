@@ -145,7 +145,7 @@ namespace MyMLAgents.Utilities
 
             return floatPixels;
         }
-        public static void GetIMGs(Camera cam, MeshRenderer renderer, int num, GameObject[] Objects, int classId)
+        public static void GetIMGs(Camera cam)
         {
             string basePath = @"D:\ObjectDetection";
             string fullImagesPath = Path.Combine(basePath, "FullImages");
@@ -165,24 +165,21 @@ namespace MyMLAgents.Utilities
             fullTexture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
             fullTexture.Apply();
             RenderTexture.active = null;
-            SaveTextureAsPNG(fullTexture, Path.Combine(fullImagesPath, $"fullImage{num}.png"));
+            SaveTextureAsPNG(fullTexture, Path.Combine(fullImagesPath, $"fullImage.png"));
             // Viewport Bounding Box 가져오기
-            Rect viewportRect = GetBoundingBoxInViewport(cam, renderer);
 
             // Viewport (0~1)을 Pixel 좌표로 변환
-            int x = Mathf.FloorToInt(viewportRect.x * fullTexture.width);
-            int y = Mathf.FloorToInt(viewportRect.y * fullTexture.height);
-            int width = Mathf.FloorToInt(viewportRect.width * fullTexture.width);
-            int height = Mathf.FloorToInt(viewportRect.height * fullTexture.height);
+            int x = fullTexture.width / 2 - 720 / 2;
+            int y = fullTexture.height / 2 - 720 / 2;
+            int width = 720;
+            int height = 720;
 
             // Texture Crop 수행
-            Texture2D croppedTexture = new Texture2D(width + 5, height + 5);
-            Color[] croppedpixels = fullTexture.GetPixels(x - 5, y - 5, width + 5, height + 5);
+            Texture2D croppedTexture = new Texture2D(width, height);
+            Color[] croppedpixels = fullTexture.GetPixels(x, y, width, height);
             croppedTexture.SetPixels(croppedpixels);
             croppedTexture.Apply();
-            SaveTextureAsPNG(croppedTexture, Path.Combine(cropImagesPath, $"cropImage{num}.png"));
-            Texture2D resizedTexture = ResizeTexture(croppedTexture, 256, 256);
-            SaveTextureAsPNG(resizedTexture, Path.Combine(resizeImagesPath, $"resizeImage{num}.png"));
+            SaveTextureAsPNG(croppedTexture, Path.Combine(cropImagesPath, $"cropImage.png"));
         }
         public static void GetODLearningData(Camera cam, int num, GameObject Objects, GameObject[] objectTypes)
         {

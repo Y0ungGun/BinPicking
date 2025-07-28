@@ -5,11 +5,11 @@ using UnityEngine.UIElements;
 
 namespace MyMLAgents
 {
-    public class CubeSpawn : MonoBehaviour
+    public class Spawner : MonoBehaviour
     {
         public Destroyer Dest;
         public GameObject Objects;
-        public GameObject[] objectTypes;
+        public GameObject[] objectPrefabs; // 인스펙터에서 프리팹을 할당할 배열
         private Vector3 spawnRangeMax;
         private Vector3 spawnRangeMin;
         private Vector3 positionRangeMax;
@@ -23,19 +23,13 @@ namespace MyMLAgents
             spawnRangeMin = transform.parent.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == "Spawn_min")?.position ?? Vector3.zero;
             positionRangeMax = transform.parent.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == "Corner_max")?.position ?? Vector3.zero;
             positionRangeMin = transform.parent.GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == "Corner_min")?.position ?? Vector3.zero;
-            objectTypes = new GameObject[]
-            {
-                GameObject.CreatePrimitive(PrimitiveType.Cube),
-                GameObject.CreatePrimitive(PrimitiveType.Cylinder),
-                GameObject.CreatePrimitive(PrimitiveType.Capsule)
-            };
         }
 
-        public void SpawnCubes()
+        public void SpawnObjects()
         {
             Dest.ClearObjects(Objects);
             //SpawnObject(true);
-            int n = Random.Range(10, 40); // 10, 40
+            int n = Random.Range(60, 80); // 10, 40
             for (int i = 0; i < n; i++)
             {
                 SpawnObject(false);
@@ -44,14 +38,17 @@ namespace MyMLAgents
 
         public void SpawnObject(bool isTarget)
         {
-            GameObject objPrefab = objectTypes[0];
+            if (objectPrefabs == null || objectPrefabs.Length == 0)
+            {
+                Debug.LogError("Object prefabs are not assigned in the Spawner.");
+                return;
+            }
+            // objectPrefabs 배열에서 무작위로 프리팹을 선택합니다.
+            GameObject objPrefab = objectPrefabs[Random.Range(0, objectPrefabs.Length)];
             GameObject newObj = Object.Instantiate(objPrefab);
             newObj.transform.parent = Objects.transform;
-
-            float randomScaleX = Random.Range(0.2f, 0.5f);
-            float randomScaleY = Random.Range(0.2f, 0.5f);
-            float randomScaleZ = Random.Range(0.2f, 0.5f);
-            newObj.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
+            
+            //newObj.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
             newObj.transform.position = Utils.GetRandomPosition(spawnRangeMin, spawnRangeMax);
             newObj.transform.rotation = Utils.GetRandomOrientation();
 
@@ -81,7 +78,7 @@ namespace MyMLAgents
             {
                 Vector3 pos = child.position;
 
-                // ���� ������� Ȯ��
+                // ���� ������� Ȯ��
                 if (!IsWithinRange(pos))
                 {
                     Destroy(child.gameObject);

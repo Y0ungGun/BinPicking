@@ -14,6 +14,7 @@ using TMPro;
 using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 using UnityEditor;
 using GripperGWS;
+using System.IO;
 
 namespace MyMLAgents
 {
@@ -119,7 +120,7 @@ namespace MyMLAgents
         {
             if (ReadyToObserve)
             {
-
+                Utils.GetIMGs(cam);
                 cs.DeleteOutlier(Objects);
                 _reward = 0f;
 
