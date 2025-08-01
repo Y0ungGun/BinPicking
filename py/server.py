@@ -23,6 +23,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 save_lock = threading.Lock()
 os.chdir("C:/Users/smsla/MultiAgent/py") # here
 #os.chdir("C:/Users/dudrj/unityworkspace/BinPicking/py")
+os.chdir("/home/dudrjs/BinPicking/py")
 print(os.getcwd())
 # 모델 로드 (한 번만 실행)
 yolo_model = YOLO("yolov11n.pt")  # here
