@@ -97,11 +97,11 @@ namespace MyMLAgents
             Objects = transform.parent.Find("Objects")?.gameObject;
             EpisodeLength = Objects.transform.childCount;
 
-            yield return new WaitForSeconds(0.1f);
 
-            Utils.FreezeObjects(Objects);
-            Utils.UnFreezeObjects(Objects);
+            //Utils.FreezeObjects(Objects);
+            //Utils.UnFreezeObjects(Objects);
 
+            yield return new WaitForSeconds(1f);
             cs.DeleteOutlier(Objects);
             ReadyToObserve = true; isActionInProgress = false;
         }
@@ -302,6 +302,24 @@ namespace MyMLAgents
         }
         public bool GetisActionInProgress()
         { return isActionInProgress; }
+        public IEnumerator EndTrial()
+        {
+            SetReward(-1);
+            isMovingTarget = false;
+            isMovingDown = false;
+            isMovingUp = false;    
+            isGrasping = false;
+            Destroy(target);
+            closeTargetGripper.ButtonClicked = false;
+            Utils.MoveToInitialPosition(transform);
+            RewardLogger.LogReward(0, 0);
+            _success = false;
+            yield return new WaitForSeconds(1f);
+            isActionInProgress = false;
+            Debug.Log($"Collision Penalty -1");
+            ReadyToObserve = true;
+            idx = 0;
+        }
     }
 
 }

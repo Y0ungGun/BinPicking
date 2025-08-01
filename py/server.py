@@ -17,15 +17,17 @@ import os
 import glob
 import time
 import csv
+from ultralytics import YOLO    
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 save_lock = threading.Lock()
 os.chdir("C:/Users/smsla/MultiAgent/py") # here
 #os.chdir("C:/Users/dudrj/unityworkspace/BinPicking/py")
 print(os.getcwd())
 # 모델 로드 (한 번만 실행)
-onnx_model_path = "best.onnx" # here
-session = ort.InferenceSession(onnx_model_path, providers=['CUDAExecutionProvider'])  # here
-print(session.get_providers())
+yolo_model = YOLO("yolov11n.pt")  # here
+yolo_model.to(device)
+yolo_model.conf = 0.85
 
 class GraspabilityModel(nn.Module):
     def __init__(self, feature_dim=256):
@@ -115,28 +117,38 @@ def draw_bounding_boxes(image, detections, save_path="output.png"):
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
     cv2.imwrite(save_path, cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
 
-# YOLO 추론 및 NMS 적용
 def run_inference(img_array):
-    #img = Image.fromarray(img_array.astype(np.uint8))
-    img_array = preprocess_image(img_array)
-    input_name = session.get_inputs()[0].name
-    output_name = session.get_outputs()[0].name
-    raw_output = session.run([output_name], {input_name: img_array.astype(np.float32)})
-    output_data = raw_output[0].squeeze(0)
+    # YOLO 모델을 사용하여 추론
+    results = yolo_model.predict(img_array, imgsz=736, conf=yolo_model.conf)
+    detections = []
+    for box in results[0].boxes:
+        x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
+        conf = box.conf[0].cpu().numpy()
+        cls = int(box.cls[0].cpu().numpy())
+        detections.append([x1, y1, x2, y2, conf, cls])
+    return [detections]
+# YOLO 추론 및 NMS 적용
+# def run_inference(img_array):
+#     #img = Image.fromarray(img_array.astype(np.uint8))
+#     img_array = preprocess_image(img_array)
+#     input_name = session.get_inputs()[0].name
+#     output_name = session.get_outputs()[0].name
+#     raw_output = session.run([output_name], {input_name: img_array.astype(np.float32)})
+#     output_data = raw_output[0].squeeze(0)
     
-    conf_thres = 0.45
-    iou_thres = 0.35
-    mask = output_data[:, 4] > conf_thres
-    boxes = output_data[mask, :4]
-    confidence = output_data[mask, 4]
-    class_probs = output_data[mask, 5:]
-    prediction = torch.cat((torch.tensor(boxes), torch.tensor(confidence).unsqueeze(1), torch.tensor(class_probs)), 1)
-    prediction = prediction.unsqueeze(0)
+#     conf_thres = 0.45
+#     iou_thres = 0.35
+#     mask = output_data[:, 4] > conf_thres
+#     boxes = output_data[mask, :4]
+#     confidence = output_data[mask, 4]
+#     class_probs = output_data[mask, 5:]
+#     prediction = torch.cat((torch.tensor(boxes), torch.tensor(confidence).unsqueeze(1), torch.tensor(class_probs)), 1)
+#     prediction = prediction.unsqueeze(0)
     
-    # NMS 적용
-    nms_output = nms.non_max_suppression(prediction, conf_thres=conf_thres, iou_thres=iou_thres)
+#     # NMS 적용
+#     nms_output = nms.non_max_suppression(prediction, conf_thres=conf_thres, iou_thres=iou_thres)
     
-    return nms_output
+#     return nms_output
 
 def extract_objects(image, detections):
     save_dir="cropped_objects"
@@ -378,7 +390,6 @@ IMAGE_PATH = "./images"
 NUM_WORKERS = 1
 
 # GraspabilityModel 초기화
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 grasp_model = GraspabilityModel().to(device)
 
 state_dict = torch.load("encoder/rn256/encoder_rn256.pth", map_location="cpu")
