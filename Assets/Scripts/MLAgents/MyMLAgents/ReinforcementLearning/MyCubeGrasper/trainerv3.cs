@@ -102,7 +102,7 @@ namespace MyMLAgents
             //Utils.FreezeObjects(Objects);
             //Utils.UnFreezeObjects(Objects);
 
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(2f);
             cs.DeleteOutlier(Objects);
             ReadyToObserve = true; isActionInProgress = false;
         }
@@ -120,7 +120,7 @@ namespace MyMLAgents
         {
             if (ReadyToObserve)
             {
-                Utils.GetIMGs(cam);
+                //Utils.GetIMGs(cam);
                 cs.DeleteOutlier(Objects);
                 _reward = 0f;
 
@@ -305,7 +305,7 @@ namespace MyMLAgents
         { return isActionInProgress; }
         public IEnumerator EndTrial()
         {
-            SetReward(-1);
+            SetReward(0);
             isMovingTarget = false;
             isMovingDown = false;
             isMovingUp = false;    
@@ -317,7 +317,7 @@ namespace MyMLAgents
             _success = false;
             yield return new WaitForSeconds(1f);
             isActionInProgress = false;
-            Debug.Log($"Collision Penalty -1");
+            Debug.Log($"Collision");
             ReadyToObserve = true;
             idx = 0;
         }

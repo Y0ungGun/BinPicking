@@ -35,7 +35,7 @@ namespace MyMLAgents
         {
             Dest.ClearObjects(Objects);
             //SpawnObject(true);
-            int n = Random.Range(10, 40); // 10, 40
+            int n = Random.Range(10, 40);
             for (int i = 0; i < n; i++)
             {
                 SpawnObject(false);
@@ -81,7 +81,7 @@ namespace MyMLAgents
             {
                 Vector3 pos = child.position;
 
-                // ¹üÀ§ ¹þ¾î³µ´ÂÁö È®ÀÎ
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½î³µï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
                 if (!IsWithinRange(pos))
                 {
                     Destroy(child.gameObject);

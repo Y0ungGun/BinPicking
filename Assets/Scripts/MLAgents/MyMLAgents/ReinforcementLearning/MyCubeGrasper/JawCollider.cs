@@ -11,11 +11,11 @@ public class JawCollider : MonoBehaviour
         
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.name != "target")
-        {
-            StartCoroutine(trainer.EndTrial());
-        }
-    }
+    // private void OnCollisionEnter(Collision collision)
+    // {
+    //     if (collision.gameObject.name != "target")
+    //     {
+    //         StartCoroutine(trainer.EndTrial());
+    //     }
+    // }
 }
