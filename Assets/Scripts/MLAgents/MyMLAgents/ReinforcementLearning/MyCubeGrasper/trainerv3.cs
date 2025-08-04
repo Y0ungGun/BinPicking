@@ -189,7 +189,16 @@ namespace MyMLAgents
                 }
                 if (isGrasping)
                 {
-                    if (idx >= 30)
+                    if (idx == 5)
+                    {
+                        List<float> CurrentArray = new List<float>();
+                        links[0].GetJointPositions(CurrentArray);
+                        List<double> doubleArray = CurrentArray.ConvertAll(x => (double)x);
+                        trainerUtils.SetEachJointPositions(doubleArray, 0, links);
+
+                        idx++;
+                    }
+                    else if (idx >= 30)
                     {
                         UpArray = trainerUtils.GetJArray(0, 0, 1.05f, 0, 2.1f, 0, 2.0f, links);
                         isGrasping = false;
@@ -245,7 +254,7 @@ namespace MyMLAgents
             int z_offset = -(AgentID % 8) * 15;
             Vector3 TargetPosition = trainerUtils.GetWorldXYZv3(x_, y_, depthCamera);
 
-            target = Utils.FindTarget(Objects, TargetPosition.x, TargetPosition.z);
+            target = Utils.FindTarget2(Objects, TargetPosition.x, TargetPosition.y, TargetPosition.z);
             //Debug.Log($"WorldPosition: x:{TargetPosition.x}, y: {TargetPosition.y}, z: {TargetPosition.z}");
             //Debug.Log($"Received Action: {actions.ContinuousActions[0]}, {actions.ContinuousActions[1]}, {actions.ContinuousActions[2]}, {actions.ContinuousActions[3]}, {actions.ContinuousActions[4]}, {actions.ContinuousActions[5]}");
             if (target == null) EndEpisode();
@@ -273,13 +282,21 @@ namespace MyMLAgents
             float _reward_eps = 0f;
             float _reward_suc = 0f;
 
-            _reward_eps = GWS.GetEpsilon();
-            if (_reward_eps > 0)
+            //_reward_eps = GWS.GetEpsilon();
+            if (target.transform.position.y > 3.0f)
             {
                 _reward_suc = 1f;
+                _reward_eps = GWS.GetEpsilon();
                 _success = true;
                 EpisodeReward++;
-            } else { _success = false; }
+            }
+            else
+            {
+                _reward_eps = 0f;
+                _reward_suc = 0f;
+                _success = false;
+            }
+            
             if (target != null && target.transform != null)
             {
                 Destroy(target);

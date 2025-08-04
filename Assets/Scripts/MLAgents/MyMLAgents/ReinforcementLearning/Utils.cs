@@ -13,6 +13,28 @@ namespace MyMLAgents.Utilities
 {
     public static class Utils
     {
+        public static GameObject FindTarget2(GameObject Objects, float x, float y, float z)
+        {
+            Transform[] allChildren = Objects.GetComponentsInChildren<Transform>();
+            GameObject closest = null;
+            float minDist = float.MaxValue;
+
+            foreach (Transform child in allChildren)
+            {
+                // ï¿½Ú±ï¿½ ï¿½Ú½ï¿½(Objects)ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+                if (child == Objects.transform || !child.gameObject.activeInHierarchy)
+                    continue;
+
+                Vector3 pos = child.position;
+                float distance = Vector3.Distance(pos, new Vector3(x, y, z));
+                if (distance < minDist)
+                {
+                    minDist = distance;
+                    closest = child.gameObject;
+                }
+            }
+            return closest;
+        }
         public static GameObject FindTarget(GameObject Objects, float x, float z)
         {
             Transform[] allChildren = Objects.GetComponentsInChildren<Transform>();
@@ -21,7 +43,7 @@ namespace MyMLAgents.Utilities
 
             foreach (Transform child in allChildren)
             {
-                // ÀÚ±â ÀÚ½Å(Objects)³ª ºñÈ°¼ºÈ­µÈ ¿ÀºêÁ§Æ®´Â Á¦¿Ü
+                // ï¿½Ú±ï¿½ ï¿½Ú½ï¿½(Objects)ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 if (child == Objects.transform || !child.gameObject.activeInHierarchy)
                     continue;
 
@@ -92,14 +114,14 @@ namespace MyMLAgents.Utilities
                         return 1; // Cylinder
                 }
             }
-            return -1; // ¾Ë ¼ö ¾ø´Â °æ¿ì
+            return -1; // ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         }
 
         public static Rect GetBoundingBoxInViewport(Camera cam, MeshRenderer renderer)
         {
             Bounds bounds = renderer.bounds;
 
-            // Bounding BoxÀÇ 8°³ ²ÀÁþÁ¡ ÁÂÇ¥ ±¸ÇÏ±â
+            // Bounding Boxï¿½ï¿½ 8ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½Ï±ï¿½
             Vector3[] points = new Vector3[8];
             points[0] = bounds.min;
             points[1] = new Vector3(bounds.min.x, bounds.min.y, bounds.max.z);
@@ -110,7 +132,7 @@ namespace MyMLAgents.Utilities
             points[6] = new Vector3(bounds.max.x, bounds.max.y, bounds.min.z);
             points[7] = bounds.max;
 
-            // Viewport ÁÂÇ¥·Î º¯È¯ (0~1 »çÀÌ °ª)
+            // Viewport ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½È¯ (0~1 ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½)
             Vector2 min = new Vector2(float.MaxValue, float.MaxValue);
             Vector2 max = new Vector2(float.MinValue, float.MinValue);
 
@@ -134,7 +156,7 @@ namespace MyMLAgents.Utilities
             SaveTextureAsPNG(texture, $"Observation_.png");
 
             Color[] pixels = texture.GetPixels();
-            float[] floatPixels = new float[pixels.Length * 3]; // RGB °ª¸¸ ÀúÀå (R, G, B)
+            float[] floatPixels = new float[pixels.Length * 3]; // RGB ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (R, G, B)
 
             for (int i = 0; i < pixels.Length; i++)
             {
@@ -154,27 +176,27 @@ namespace MyMLAgents.Utilities
             string YOLOPath = Path.Combine(basePath, "YOLOAnnotations");
             string COCOPath = Path.Combine(basePath, "COCOAnnotations");
 
-            // RenderTexture ¼³Á¤
+            // RenderTexture ï¿½ï¿½ï¿½ï¿½
             RenderTexture renderTexture = new RenderTexture(1280, 720, 16);
             cam.targetTexture = renderTexture;
             cam.Render();
 
-            // RenderTexture ¡æ Texture2D º¯È¯
+            // RenderTexture ï¿½ï¿½ Texture2D ï¿½ï¿½È¯
             Texture2D fullTexture = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGB24, false);
             RenderTexture.active = renderTexture;
             fullTexture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
             fullTexture.Apply();
             RenderTexture.active = null;
             SaveTextureAsPNG(fullTexture, Path.Combine(fullImagesPath, $"fullImage.png"));
-            // Viewport Bounding Box °¡Á®¿À±â
+            // Viewport Bounding Box ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-            // Viewport (0~1)À» Pixel ÁÂÇ¥·Î º¯È¯
+            // Viewport (0~1)ï¿½ï¿½ Pixel ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½È¯
             int x = fullTexture.width / 2 - 720 / 2;
             int y = fullTexture.height / 2 - 720 / 2;
             int width = 720;
             int height = 720;
 
-            // Texture Crop ¼öÇà
+            // Texture Crop ï¿½ï¿½ï¿½ï¿½
             Texture2D croppedTexture = new Texture2D(width, height);
             Color[] croppedpixels = fullTexture.GetPixels(x, y, width, height);
             croppedTexture.SetPixels(croppedpixels);
@@ -256,30 +278,30 @@ namespace MyMLAgents.Utilities
             Dictionary<string, object> cocoData = new Dictionary<string, object>();
             List<object> images = new List<object>();
             List<object> annotations = new List<object>();
-            int annotationId = 0;  // annotation ID (°¢ °´Ã¼¸¶´Ù Áõ°¡)
+            int annotationId = 0;  // annotation ID (ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
             foreach (Transform obj in Objects.transform)
             {
-                // BoundingBox (¿©±â¼­´Â ¿¹½Ã·Î °¡Á¤)
+                // BoundingBox (ï¿½ï¿½ï¿½â¼­ï¿½ï¿½ ï¿½ï¿½ï¿½Ã·ï¿½ ï¿½ï¿½ï¿½ï¿½)
                 Rect viewport = GetBoundingBoxInViewport(cam, obj.GetComponent<MeshRenderer>());
                 float centerX = viewport.x + viewport.width / 2f;
                 float centerY = viewport.y + viewport.height / 2f;
                 float width = viewport.width;
                 float height = viewport.height;
 
-                // Class ID (MeshRendererÀÇ Á¾·ù¿¡ µû¶ó ºÐ·ù)
+                // Class ID (MeshRendererï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ð·ï¿½)
                 int classId = GetClassID(objectTypes, obj);
 
                 annotations.Add(new
                 {
                     id = annotationId,
-                    image_id = 0,  // ÇÏ³ªÀÇ ÀÌ¹ÌÁö¿¡ ´ëÇØ ¿©·¯ °´Ã¼ Á¤º¸ Ãß°¡
+                    image_id = 0,  // ï¿½Ï³ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
                     category_id = classId,
-                    bbox = new float[] { centerX, centerY, width, height },  // bbox´Â [x_center, y_center, width, height]
+                    bbox = new float[] { centerX, centerY, width, height },  // bboxï¿½ï¿½ [x_center, y_center, width, height]
                     area = width * height,
                     iscrowd = 0
                 });
 
-                annotationId++;  // annotation ID Áõ°¡
+                annotationId++;  // annotation ID ï¿½ï¿½ï¿½ï¿½
             }
             cocoData["images"] = images;
             cocoData["annotations"] = annotations;
@@ -290,7 +312,7 @@ namespace MyMLAgents.Utilities
                 new { id = 2, name = "capsule" }
             };
 
-            // JSON ÆÄÀÏ·Î ÀúÀå
+            // JSON ï¿½ï¿½ï¿½Ï·ï¿½ ï¿½ï¿½ï¿½ï¿½
             string json = JsonConvert.SerializeObject(cocoData, Newtonsoft.Json.Formatting.Indented);
             File.WriteAllText(filePath, json);
         }
@@ -298,7 +320,7 @@ namespace MyMLAgents.Utilities
         {
             string filePath = Path.Combine(cocoPath, $"coco_annotations{num}.json");
 
-            // COCO ±¸Á¶ Á¤ÀÇ
+            // COCO ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             Dictionary<string, object> cocoData = new Dictionary<string, object>();
             List<object> images = new List<object>();
             List<object> annotations = new List<object>();
@@ -335,28 +357,28 @@ namespace MyMLAgents.Utilities
         }
         public static float[] GetTargetIMG(Camera cam, MeshRenderer renderer)
         {
-            // RenderTexture ¼³Á¤
+            // RenderTexture ï¿½ï¿½ï¿½ï¿½
             RenderTexture renderTexture = new RenderTexture(1280, 720, 16);
             cam.targetTexture = renderTexture;
             cam.Render();
 
-            // RenderTexture ¡æ Texture2D º¯È¯
+            // RenderTexture ï¿½ï¿½ Texture2D ï¿½ï¿½È¯
             Texture2D fullTexture = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGB24, false);
             RenderTexture.active = renderTexture;
             fullTexture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
             fullTexture.Apply();
             RenderTexture.active = null;
             SaveTextureAsPNG(fullTexture, $"FullImage.png");
-            // Viewport Bounding Box °¡Á®¿À±â
+            // Viewport Bounding Box ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             Rect viewportRect = GetBoundingBoxInViewport(cam, renderer);
 
-            // Viewport (0~1)À» Pixel ÁÂÇ¥·Î º¯È¯
+            // Viewport (0~1)ï¿½ï¿½ Pixel ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½È¯
             int x = Mathf.FloorToInt(viewportRect.x * fullTexture.width);
             int y = Mathf.FloorToInt(viewportRect.y * fullTexture.height);
             int width = Mathf.FloorToInt(viewportRect.width * fullTexture.width);
             int height = Mathf.FloorToInt(viewportRect.height * fullTexture.height);
 
-            // Texture Crop ¼öÇà
+            // Texture Crop ï¿½ï¿½ï¿½ï¿½
             Texture2D croppedTexture = new Texture2D(width+5, height+5);
             Color[] croppedpixels = fullTexture.GetPixels(x-5, y-5, width+5, height+5);
             croppedTexture.SetPixels(croppedpixels);
@@ -368,7 +390,7 @@ namespace MyMLAgents.Utilities
             Color[] pixels = resizedTexture.GetPixels();
             resizedTexture.SetPixels(pixels);
             resizedTexture.Apply();
-            float[] floatPixels = new float[pixels.Length * 3]; // RGB °ª¸¸ ÀúÀå (R, G, B)
+            float[] floatPixels = new float[pixels.Length * 3]; // RGB ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (R, G, B)
 
             for (int i = 0; i < pixels.Length; i++)
             {
