@@ -18,6 +18,12 @@ import glob
 import time
 import matplotlib
 import argparse
+import os
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+
+import matplotlib
+matplotlib.use('Agg')
+
 
 #os.chdir("C:/Users/smsla/MultiAgent/py")
 os.chdir("C:/Users/dudrj/unityworkspace/BinPicking/py")

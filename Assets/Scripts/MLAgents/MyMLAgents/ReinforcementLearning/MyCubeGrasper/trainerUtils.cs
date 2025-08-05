@@ -224,8 +224,8 @@ namespace MyMLAgents
         public static float GetZ(int x, int y, Camera depthCamera)
         {
             Texture2D Depth = GetDepth(depthCamera);
-            //float DepthValue = 1 - Depth.GetPixel(x, y).r;
-            float DepthValue = Depth.GetPixel(x, y).r;
+            float DepthValue = 1 - Depth.GetPixel(x, y).r;
+            //float DepthValue = Depth.GetPixel(x, y).r;
             float zValue = depthCamera.nearClipPlane / (1.0f - DepthValue * (1.0f - depthCamera.nearClipPlane / depthCamera.farClipPlane));
 
             UnityEngine.Object.Destroy(Depth);
