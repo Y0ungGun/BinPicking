@@ -265,8 +265,8 @@ namespace MyMLAgents
 
             x = TargetPosition.x + x_offset + _w * actions.ContinuousActions[0];
             y = TargetPosition.z + z_offset + _w * actions.ContinuousActions[1];
-            //z = TargetPosition.y + 0.15f + 0.2f * _w * actions.ContinuousActions[2];
-            z = TargetPosition.y + 0.15f + 0.2f * _w * 1;
+            z = TargetPosition.y + 0.15f + 0.2f * _w * actions.ContinuousActions[2];
+            //z = TargetPosition.y + 0.15f + 0.2f * _w * 1;
             x = 0.1f * x;
             y = 0.1f * y;
             z = 0.1f * z;
