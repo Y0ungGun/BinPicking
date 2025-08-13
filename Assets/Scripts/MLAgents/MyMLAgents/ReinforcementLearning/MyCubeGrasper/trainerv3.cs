@@ -290,6 +290,10 @@ namespace MyMLAgents
                 _reward_eps = GWS.GetEpsilon();
                 _success = true;
                 EpisodeReward++;
+                if (target != null && target.transform != null)
+                {
+                    Destroy(target);
+                }
             }
             else
             {
@@ -298,10 +302,6 @@ namespace MyMLAgents
                 _success = false;
             }
             
-            if (target != null && target.transform != null)
-            {
-                Destroy(target);
-            }
             cs.DeleteOutlier(Objects);
             GWS.ClearWrench();
             
