@@ -287,7 +287,7 @@ namespace MyMLAgents
             if (target.transform.position.y > 3.0f)
             {
                 _reward_suc = 1f;
-                _reward_eps = GWS.GetEpsilon();
+                _reward_eps = 10 * GWS.GetEpsilon();
                 _success = true;
                 EpisodeReward++;
                 if (target != null && target.transform != null)

@@ -1,0 +1,25 @@
+behaviors: 
+  MyGrasp: 
+    trainer_type: sac
+    hyperparameters:
+      batch_size: 64
+      buffer_size: 2048
+      learning_rate: 5.0e-4
+      tau: 0.005
+      steps_per_update: 1.0
+      save_replay_buffer: false
+      init_entcoef: 0.01
+      learning_rate_schedule: linear
+    network_settings:
+      normalize: true
+      hidden_units: 256
+      num_layers: 2
+      torch_device: cuda
+    reward_signals:
+      extrinsic:
+        gamma: 0.0
+        strength: 1.0
+    max_steps: 100000
+    time_horizon: 1
+    summary_freq: 500
+    checkpoint_interval: 500

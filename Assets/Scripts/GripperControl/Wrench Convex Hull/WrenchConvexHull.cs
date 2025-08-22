@@ -57,7 +57,7 @@ namespace GripperGWS
             if (convexHull.ErrorMessage == "")
             {
                 double eps = CalculateEpsilon(convexHull);
-                epsilon = (float)eps * 20f;
+                epsilon = (float)eps;
                 //Debug.Log($"Epsilon, Radius:{eps}, {epsilon}");
             }
 
