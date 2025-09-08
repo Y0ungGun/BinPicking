@@ -31,11 +31,13 @@ namespace MyMLAgents
             };
         }
 
-        public void SpawnCubes()
+        public void SpawnCubes(int step)
         {
+            int num = step / 9000 + 1;
             Dest.ClearObjects(Objects);
             //SpawnObject(true);
-            int n = Random.Range(10, 40);
+            int n = Random.Range(1 * num, 4 * num);
+            Debug.Log($"Spawning {n} objects, within {num}");
             for (int i = 0; i < n; i++)
             {
                 SpawnObject(false);

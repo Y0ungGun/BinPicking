@@ -300,7 +300,7 @@ namespace MyMLAgents
 
             byte[] image = CroppedIMG.EncodeToPNG();
 
-            string fileName = @$"C:\Users\dudrj\unityworkspace\MultiAgent\py\images\image_{component.GetComponent<trainer2>().AgentID}.png";
+            string fileName = @$"C:\Users\dudrj\unityworkspace\MultiAgent\py\images\image_{component.GetComponent<trainer3>().AgentID}.png";
 
             File.WriteAllBytes(fileName, image);
             //Debug.Log("Image saved to captured_image.png");

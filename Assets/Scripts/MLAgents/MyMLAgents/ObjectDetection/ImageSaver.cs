@@ -39,7 +39,7 @@ namespace MyMLAgents
         {
             if (Time.time >= nextTime2)
             {
-                cs.SpawnCubes();
+                cs.SpawnCubes(100000);
                 spawnTime = Time.time;
                 nextTime2 = Time.time + interval2;
                 isSent = false;

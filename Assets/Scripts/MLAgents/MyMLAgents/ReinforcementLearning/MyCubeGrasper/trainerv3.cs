@@ -88,7 +88,7 @@ namespace MyMLAgents
         {
             Episode = Episode + 1f;
             SetInitial();
-            cs.SpawnCubes();
+            cs.SpawnCubes(stepper.GetStep());
             StartCoroutine(StartwithDelayCoroutine());
             //StartwithDelay();
         }
@@ -232,7 +232,7 @@ namespace MyMLAgents
                         
                         if (Objects.transform.childCount <= 1)
                         {
-                            Debug.Log($"Reward for Episode{Episode}: {EpisodeReward}");
+                            //Debug.Log($"Reward for Episode{stepper.GetStep()}: {EpisodeReward}");
                             EndEpisode();
                         }
                         ReadyToObserve = true;
@@ -244,6 +244,7 @@ namespace MyMLAgents
         }
         public override void OnActionReceived(ActionBuffers actions)
         {
+            stepper.AddStep();
             isActionInProgress = true;
             CalJoints(actions);
             isMovingTarget = true;
@@ -315,6 +316,7 @@ namespace MyMLAgents
         {
             EpisodeReward = 0;
             _reward = 0;
+            //stepper.AddStep();
             isActionInProgress = true;
             closeTargetGripper.ButtonClicked = false;
             ReadyToObserve = false;

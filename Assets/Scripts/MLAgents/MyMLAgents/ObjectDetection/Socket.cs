@@ -41,7 +41,7 @@ namespace MyMLAgents
             using (BinaryReader reader = new BinaryReader(stream))
             {
                 string msg = "-1";
-                var comp = component.GetComponent<trainer2>();
+                var comp = component.GetComponent<trainer3>();
                 if (comp != null)
                 {
                     msg = comp.AgentID.ToString();
