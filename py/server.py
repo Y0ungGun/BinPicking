@@ -393,13 +393,22 @@ NUM_WORKERS = 1
 # GraspabilityModel 초기화
 grasp_model = GraspabilityModel().to(device)
 
-state_dict = torch.load("encoder/rn256/encoder_rn256.pth", map_location="cpu")
-model_dict = grasp_model.state_dict()
+# state_dict = torch.load("encoder/rn256/encoder_rn256.pth", map_location="cpu")
+# model_dict = grasp_model.state_dict()
 
-pretrained_dict = {k: v for k, v in state_dict.items() if k in model_dict and 'output' not in k}
-model_dict.update(pretrained_dict)
+# pretrained_dict = {k: v for k, v in state_dict.items() if k in model_dict and 'output' not in k}
+# model_dict.update(pretrained_dict)
+# grasp_model.load_state_dict(model_dict)
+# print("Loaded encoder_rn256 weights (feature extractor + fc).")
+
+dann_ckpt = torch.load("dann_ae.pth", map_location="cpu")
+encoder_dict = {k.replace('encoder.', ''): v for k, v in dann_ckpt.items() if k.startswith('encoder.')}
+model_dict = grasp_model.state_dict()
+for k in encoder_dict:
+    if k in model_dict:
+        model_dict[k] = encoder_dict[k]
 grasp_model.load_state_dict(model_dict)
-print("Loaded encoder_rn256 weights (feature extractor + fc).")
+print("Loaded DANN encoder weights (feature extractor + fc) from dann_ae.pth.")
 
 output_ckpt = "grasp_out.pth"
 if os.path.exists(output_ckpt):

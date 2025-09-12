@@ -33,7 +33,7 @@ namespace MyMLAgents
 
         public void SpawnCubes(int step)
         {
-            int num = step / 9000 + 1;
+            int num = step / 15000 + 1;
             Dest.ClearObjects(Objects);
             //SpawnObject(true);
             int n = Random.Range(1 * num, 4 * num);
