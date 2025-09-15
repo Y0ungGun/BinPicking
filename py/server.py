@@ -42,6 +42,9 @@ class GraspabilityModel(nn.Module):
         self.fc = nn.Linear(512, feature_dim)
         self.output = nn.Linear(feature_dim, 1)  # 노드 1개짜리 출력층 추가
 
+        nn.init.normal_(self.output.weight, mean=0.0, std=0.01)
+        nn.init.constant_(self.output.bias, 0.0)
+
         # feature extractor와 fc는 freeze
         for param in self.features.parameters():
             param.requires_grad = False
@@ -128,28 +131,6 @@ def run_inference(img_array):
         cls = int(box.cls[0].cpu().numpy())
         detections.append([x1, y1, x2, y2, conf, cls])
     return [detections]
-# YOLO 추론 및 NMS 적용
-# def run_inference(img_array):
-#     #img = Image.fromarray(img_array.astype(np.uint8))
-#     img_array = preprocess_image(img_array)
-#     input_name = session.get_inputs()[0].name
-#     output_name = session.get_outputs()[0].name
-#     raw_output = session.run([output_name], {input_name: img_array.astype(np.float32)})
-#     output_data = raw_output[0].squeeze(0)
-    
-#     conf_thres = 0.45
-#     iou_thres = 0.35
-#     mask = output_data[:, 4] > conf_thres
-#     boxes = output_data[mask, :4]
-#     confidence = output_data[mask, 4]
-#     class_probs = output_data[mask, 5:]
-#     prediction = torch.cat((torch.tensor(boxes), torch.tensor(confidence).unsqueeze(1), torch.tensor(class_probs)), 1)
-#     prediction = prediction.unsqueeze(0)
-    
-#     # NMS 적용
-#     nms_output = nms.non_max_suppression(prediction, conf_thres=conf_thres, iou_thres=iou_thres)
-    
-#     return nms_output
 
 def extract_objects(image, detections):
     save_dir="cropped_objects"
@@ -407,6 +388,7 @@ model_dict = grasp_model.state_dict()
 for k in encoder_dict:
     if k in model_dict:
         model_dict[k] = encoder_dict[k]
+        print(f"Loaded {k} from DANN checkpoint.")
 grasp_model.load_state_dict(model_dict)
 print("Loaded DANN encoder weights (feature extractor + fc) from dann_ae.pth.")
 
@@ -416,7 +398,7 @@ if os.path.exists(output_ckpt):
     print(f"Loaded output head weights from {output_ckpt}")
 
 grasp_model.eval()
-optimizer = torch.optim.Adam(grasp_model.output.parameters(), lr=5e-4)  # 출력층만 학습
+optimizer = torch.optim.Adam(grasp_model.output.parameters(), lr=1e-5)  # 출력층만 학습
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(script_dir)

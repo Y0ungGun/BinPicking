@@ -1,0 +1,65 @@
+{
+    "MyGrasp": {
+        "checkpoints": [
+            {
+                "steps": 98499,
+                "file_path": "results/MyGrasp_250912_5curri/MyGrasp/MyGrasp-98499.onnx",
+                "reward": 36.099325227737424,
+                "creation_time": 1757675871.574971,
+                "auxillary_file_paths": [
+                    "results/MyGrasp_250912_5curri/MyGrasp/MyGrasp-98499.pt"
+                ]
+            },
+            {
+                "steps": 98999,
+                "file_path": "results/MyGrasp_250912_5curri/MyGrasp/MyGrasp-98999.onnx",
+                "reward": 35.13019180774689,
+                "creation_time": 1757675966.0438654,
+                "auxillary_file_paths": [
+                    "results/MyGrasp_250912_5curri/MyGrasp/MyGrasp-98999.pt"
+                ]
+            },
+            {
+                "steps": 99499,
+                "file_path": "results/MyGrasp_250912_5curri/MyGrasp/MyGrasp-99499.onnx",
+                "reward": 34.73470584551493,
+                "creation_time": 1757676059.4949949,
+                "auxillary_file_paths": [
+                    "results/MyGrasp_250912_5curri/MyGrasp/MyGrasp-99499.pt"
+                ]
+            },
+            {
+                "steps": 99999,
+                "file_path": "results/MyGrasp_250912_5curri/MyGrasp/MyGrasp-99999.onnx",
+                "reward": 34.78083753396594,
+                "creation_time": 1757676153.3420334,
+                "auxillary_file_paths": [
+                    "results/MyGrasp_250912_5curri/MyGrasp/MyGrasp-99999.pt"
+                ]
+            },
+            {
+                "steps": 100001,
+                "file_path": "results/MyGrasp_250912_5curri/MyGrasp/MyGrasp-100001.onnx",
+                "reward": 34.78083753396594,
+                "creation_time": 1757676153.8125415,
+                "auxillary_file_paths": [
+                    "results/MyGrasp_250912_5curri/MyGrasp/MyGrasp-100001.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 100001,
+            "file_path": "results/MyGrasp_250912_5curri/MyGrasp.onnx",
+            "reward": 34.78083753396594,
+            "creation_time": 1757676153.8125415,
+            "auxillary_file_paths": [
+                "results/MyGrasp_250912_5curri/MyGrasp/MyGrasp-100001.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.7.1+cu126"
+    }
+}

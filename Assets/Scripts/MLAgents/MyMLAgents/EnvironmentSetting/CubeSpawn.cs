@@ -33,11 +33,11 @@ namespace MyMLAgents
 
         public void SpawnCubes(int step)
         {
-            int num = step / 15000 + 1;
+            int num = step / 20000 + 1;
             Dest.ClearObjects(Objects);
             //SpawnObject(true);
-            int n = Random.Range(1 * num, 4 * num);
-            Debug.Log($"Spawning {n} objects, within {num}");
+            int n = Mathf.Min(num * 5, 20);
+            //Debug.Log($"Spawning {n} objects, within {num}");
             for (int i = 0; i < n; i++)
             {
                 SpawnObject(false);
