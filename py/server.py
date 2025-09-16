@@ -206,7 +206,7 @@ def run_graspability_model(instance_id, img_array):
     return response
 
 
-def online_learning_from_dir(batch_size=128):
+def online_learning_from_dir(buffer_size=512, batch_size=64, epochs=10, delete_size=128):
     global optimizer
     pred_dir = "online_data"
     loss_log_path = "loss_log.csv" 
@@ -239,10 +239,18 @@ def online_learning_from_dir(batch_size=128):
     grasp_model.train()
     criterion = torch.nn.BCELoss()
     optimizer.zero_grad()
-    outputs, _ = grasp_model(images)
-    loss = criterion(outputs, labels)
-    loss.backward()
-    optimizer.step()
+    for epoch in range(epochs):
+        perm = torch.randperm(buffer_size)
+        for i in range(0, buffer_size, batch_size):
+            idx = perm[i:i+batch_size]
+            batch_imgs = images[idx]
+            batch_labels = labels[idx]
+            optimizer.zero_grad()
+            outputs, _ = grasp_model(batch_imgs)
+            loss = criterion(outputs, batch_labels)
+            loss.backward()
+            optimizer.step()
+        print(f"Epoch {epoch+1}/{epochs} finished.")
     grasp_model.eval()
 
     # === loss 기록 ===
@@ -276,7 +284,7 @@ def online_learning_from_dir(batch_size=128):
         else:
             print(f"Loss {loss.item():.4f} (best: {best_loss:.4f})")
 
-        for img_file in img_files:
+        for img_file in img_files[:delete_size]:
             try:
                 os.remove(img_file)
             except Exception as e:
@@ -341,8 +349,8 @@ def handle_client(client_socket):
                 print(f"Agent {agent_id} processed in {comm_end - comm_start:.2f}s (Inference: {infer_end - infer_start:.2f}s, Comm: {comm_end - comm_start - (infer_end - infer_start):.2f}s)")
             # === 온라인 학습 트리거 ===
             feedback_files = glob.glob(os.path.join(pred_dir, "*_[01].png"))
-            if len(feedback_files) >= 128:
-                online_learning_from_dir(batch_size=128)
+            if len(feedback_files) >= BUFFER_SIZE:
+                online_learning_from_dir(buffer_size=BUFFER_SIZE, batch_size=BATCH_SIZE, epochs=EPOCHS, delete_size=DELETE_SIZE)
 
         except Exception as e:
             print(f"Client disconnected: {e}")
@@ -373,6 +381,10 @@ NUM_WORKERS = 1
 
 # GraspabilityModel 초기화
 grasp_model = GraspabilityModel().to(device)
+BUFFER_SIZE = 512
+BATCH_SIZE = 64
+EPOCHS = 10
+DELETE_SIZE = 128
 
 # state_dict = torch.load("encoder/rn256/encoder_rn256.pth", map_location="cpu")
 # model_dict = grasp_model.state_dict()
