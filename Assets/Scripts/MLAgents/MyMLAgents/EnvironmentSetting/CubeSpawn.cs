@@ -38,6 +38,7 @@ namespace MyMLAgents
             //SpawnObject(true);
             num = Mathf.Min(num, 10);
             int n = Random.Range(num, num * 4);
+            n = 2;
             //Debug.Log($"Spawning {n} objects, within {num}");
             for (int i = 0; i < n; i++)
             {

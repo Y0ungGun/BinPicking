@@ -310,6 +310,14 @@ namespace MyMLAgents
             
 
             _reward = _reward_eps + _reward_suc;
+            if (_reward_eps < 0.5f)
+            {
+                _reward = 0;
+            }
+            else
+            {
+                _reward = _reward_eps;
+            }
             SetReward(_reward);
         }
         private void SetInitial()

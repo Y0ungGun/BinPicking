@@ -1,0 +1,6 @@
+단순한 상황(물체가 1~2개 존재)에서 모델이 파지 quality를 극대화할 수 있는 rotation을 학습할 수 있는지 검증하기 위한 실험.
+해당 검증을 위해 단순한 상황으로 env를 설정하고, quality reward만 부여하고 success reward를 부여하지 않음.
+
+실험 결과는 visualization results에서 볼 수 있듯 그리퍼의 yaw 성분이 거의 변하지 않았음.
+
+원인을 feature vector간의 거리가 충분히 멀지 않아서라고 판단. 추가 실험 251002에서 진행함.

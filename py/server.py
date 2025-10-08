@@ -175,7 +175,6 @@ def run_graspability_model(instance_id, img_array):
         objects_tensor = objects_tensor.to(device)
         with torch.no_grad():
             grasp_probs, feature_vectors = grasp_model(objects_tensor)
-        
     else:
         print(f"No objects detected in image {instance_id}.")
 
@@ -215,8 +214,8 @@ def online_learning_from_dir(buffer_size=512, batch_size=64, epochs=10, delete_s
         glob.glob(os.path.join(pred_dir, "*_[01].png")),
         key=os.path.getmtime,
         reverse=True
-    )[:batch_size]
-    if len(img_files) < batch_size:
+    )[:buffer_size]
+    if len(img_files) < buffer_size:
         return  # 데이터가 충분하지 않으면 학습하지 않음
 
     images = []
@@ -235,7 +234,7 @@ def online_learning_from_dir(buffer_size=512, batch_size=64, epochs=10, delete_s
     labels = torch.tensor(labels, dtype=torch.float32)
     images = images.to(device)
     labels = labels.to(device)
-
+    
     grasp_model.train()
     criterion = torch.nn.BCELoss()
     optimizer.zero_grad()
@@ -245,8 +244,13 @@ def online_learning_from_dir(buffer_size=512, batch_size=64, epochs=10, delete_s
             idx = perm[i:i+batch_size]
             batch_imgs = images[idx]
             batch_labels = labels[idx]
+            print(f"Batch images shape: {batch_imgs.shape}, Batch labels shape: {batch_labels.shape}")
+            print(f"Batch labels unique values: {torch.unique(batch_labels)}")
+            print(f"Batch images min: {batch_imgs.min()}, max: {batch_imgs.max()}")
+
             optimizer.zero_grad()
             outputs, _ = grasp_model(batch_imgs)
+            print(f"Outputs shape: {outputs.shape}, Labels shape: {batch_labels.shape}")
             loss = criterion(outputs, batch_labels)
             loss.backward()
             optimizer.step()
@@ -394,7 +398,7 @@ DELETE_SIZE = 128
 # grasp_model.load_state_dict(model_dict)
 # print("Loaded encoder_rn256 weights (feature extractor + fc).")
 
-dann_ckpt = torch.load("dann_ae.pth", map_location="cpu")
+dann_ckpt = torch.load("rot_embedding.pth", map_location="cpu")
 encoder_dict = {k.replace('encoder.', ''): v for k, v in dann_ckpt.items() if k.startswith('encoder.')}
 model_dict = grasp_model.state_dict()
 for k in encoder_dict:
@@ -402,7 +406,7 @@ for k in encoder_dict:
         model_dict[k] = encoder_dict[k]
         print(f"Loaded {k} from DANN checkpoint.")
 grasp_model.load_state_dict(model_dict)
-print("Loaded DANN encoder weights (feature extractor + fc) from dann_ae.pth.")
+print("Loaded DANN encoder weights (feature extractor + fc) from grasp_model.pth.")
 
 output_ckpt = "grasp_out.pth"
 if os.path.exists(output_ckpt):
